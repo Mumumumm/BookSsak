@@ -13,7 +13,7 @@ public class MenuManager {
 
     public void menuSelect() {
         while (true) {
-            this.login();
+             this.login();
             while (this.currentUser!=null){
                 Boolean endFlag = false;
                 System.out.println("[메뉴 선택]");
@@ -29,14 +29,18 @@ public class MenuManager {
 
                 switch (menuSelect) {
                     case SELECT1:
-
+                        BookChallenge bookChallenge = new BookChallenge();
+                        bookChallenge.bookChallengeMenu(this.currentUser);
                         break;
 
                     case SELECT2:
-
+                        FootPrints footPrints = new FootPrints();
+                        footPrints.fooPrintsMenu();
                         break;
 
                     case SELECT3:
+                        Library live = new Library();
+                        live.libraryMenu();
 
                         break;
 
