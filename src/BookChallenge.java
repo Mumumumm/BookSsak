@@ -13,7 +13,7 @@ public class BookChallenge {
     public BookChallenge() {
     }
 
-    public void BookChallengeMenu() {
+    public void bookChallengeMenu(User currentUser) {
         Scanner input = new Scanner(System.in);
         System.out.println("===================");
         System.out.println("[독서 챌린지]");

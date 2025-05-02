@@ -39,9 +39,8 @@ public class MenuManager {
                         break;
 
                     case SELECT3:
-                        Library live = new Library();
+                        Library live = new Library(this.currentUser);
                         live.libraryMenu();
-
                         break;
 
                     case SELECT4:

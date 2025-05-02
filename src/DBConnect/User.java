@@ -6,7 +6,6 @@ public class User {
     private String userId;
     private String userName;
     private Date userBirth;
-    public Book currentBook = null;
 
     public User(String userId, String userName, Date userBirth) {
         this.userId = userId;

@@ -12,7 +12,7 @@ public class FootPrints {
 
     public FootPrints() {}
 
-    public void FooPrintsMenu() {
+    public void fooPrintsMenu() {
         Scanner input = new Scanner(System.in);
         System.out.println("===================");
         System.out.println("[독서 발자취]");
