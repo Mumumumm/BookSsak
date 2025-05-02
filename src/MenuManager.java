@@ -6,18 +6,29 @@ public class MenuManager {
     private final int SELECT3 = 3;
     private final int SELECT4 = 4;
 
+    LoginManager login;
     BookChallenge bc;
     FootPrints fp;
     Library live;
+    User mUser;
 
     public MenuManager() {
         bc = new BookChallenge(this); // this = 현재 MenuManager를 전달
         fp = new FootPrints(this);
         live = new Library(this);
+        login = new LoginManager(this);
     }
 
     public void MenuSelect() {
         Scanner input = new Scanner(System.in);
+
+        while (mUser == null || !mUser.isLogin()) {
+            mUser = login.Login();
+            System.out.println(mUser.getUserId() + " 환영합니다");
+            if (mUser == null) {
+                System.out.println("아이디 또는 비밀번호 오류");
+            }
+        }
 
         System.out.println("[메뉴 선택]");
         System.out.println("1. 도서 챌린지");

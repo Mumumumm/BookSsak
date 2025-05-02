@@ -2,7 +2,7 @@
 // click the <icon src="AllIcons.Actions.Execute"/> icon in the gutter.
 public class Main {
     public static void main(String[] args) {
-        MainManager run = new MainManager();
-        run.run();
+        MenuManager menu = new MenuManager();
+        menu.MenuSelect();
     }
 }
