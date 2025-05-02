@@ -139,7 +139,10 @@ public class BookChallenge {
         // 저장된 finalElapsedSeconds 변수를 이제 다른 로직에서 사용할 수 있습니다.
         // 예: if (finalElapsedSeconds > 60) { ... }
 
-        db.reading_page();
+        user.addReadingTime(elapsedSeconds);   // 메모리에 누적
+        db.saveUserTime(user); // DB에 누적 저장
+
+        System.out.println("챌린지가 종료되었습니다 짝짝짝");
 
     }
 

@@ -169,13 +169,7 @@ public class DBConnect {
         }
     }
 
-    // 쪽수 기록하기
-    public int reading_page(){
-        Scanner input = new Scanner(System.in);
-        System.out.println("오늘 읽은 쪽수 기록");
-        int readePage = input.nextInt();
-        return totalPage += readePage;
-    }
+
 
 
 }
