@@ -1,3 +1,5 @@
+import DBConnect.User;
+
 import java.util.Scanner;
 
 public class FootPrints {
@@ -6,16 +8,16 @@ public class FootPrints {
     private final int SELECT3 = 3;
     private final int SELECT4 = 4;
 
-    private MenuManager mMenu;
+    private User currentUser = null;
 
-    public FootPrints(MenuManager menu) {}
+    public FootPrints() {}
 
     public void FooPrintsMenu() {
         Scanner input = new Scanner(System.in);
         System.out.println("===================");
         System.out.println("[독서 발자취]");
         System.out.println("===================");
-        System.out.println("1. 내가 읽은 도서 목록");
+        System.out.println("1. 내 서재");
         System.out.println("2. 내 독서 통계");
         System.out.println("3. 다독왕 랭킹");
         System.out.println("4. 메뉴로 가기");
@@ -34,8 +36,18 @@ public class FootPrints {
 
                 break;
             case SELECT4:
-                mMenu.MenuSelect();
-                break;
+                return;
         }
+    }
+    public void myBookList(){
+
+    }
+
+    public void myBookStatistics(){
+
+    }
+
+    public void rank(){
+        
     }
 }

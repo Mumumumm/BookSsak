@@ -59,7 +59,9 @@ public class DBConnect {
                     String userName = rs.getString("username");
                     Date userBirth = rs.getDate("birth");
                     loginUser = new User(userId, userName, userBirth);
+                    System.out.println("========================");
                     System.out.println("안녕하세요 " + loginUser.getUserName() + " 님");
+                    System.out.println("========================");
                 } else {
                     System.out.println("계정 정보가 잘못되었습니다.");
                     return null;

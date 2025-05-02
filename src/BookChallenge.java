@@ -1,3 +1,5 @@
+import DBConnect.User;
+
 import java.util.Scanner;
 
 public class BookChallenge {
@@ -6,7 +8,7 @@ public class BookChallenge {
     private final int SELECT3 = 3;
     private final int SELECT4 = 4;
 
-    MenuManager mMenu = new MenuManager();
+    private User currentUser = null;
 
     public BookChallenge() {
     }
@@ -17,9 +19,9 @@ public class BookChallenge {
         System.out.println("[독서 챌린지]");
         System.out.println("===================");
         System.out.println("여기에 도서목록들");
-        System.out.println("1. 책읽기 시작");
-        System.out.println("2. 챌린지 책 등록 하기");
-        System.out.println("3. 챌린지 책 취소 하기");
+        System.out.println("1. 독서 시작");
+        System.out.println("2. 도서 등록");
+        System.out.println("3. 도서 삭제");
         System.out.println("4. 메뉴로 가기");
 
         int select = input.nextInt();
@@ -36,8 +38,19 @@ public class BookChallenge {
 
                 break;
             case SELECT4:
-                mMenu.MenuSelect();
-                break;
+                return;
         }
+    }
+
+    public void bookTimer(){
+
+    }
+
+    public void bookAdd(){
+
+    }
+
+    public void bookDelete(){
+
     }
 }

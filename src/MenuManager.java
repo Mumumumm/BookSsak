@@ -11,7 +11,7 @@ public class MenuManager {
 
     private User currentUser = null;
 
-    public void MenuSelect() {
+    public void menuSelect() {
         while (true) {
             this.login();
             while (this.currentUser!=null){
@@ -20,7 +20,7 @@ public class MenuManager {
                 System.out.println("1. 도서 챌린지");
                 System.out.println("2. 독서 발자취");
                 System.out.println("3. 라이브러리");
-                System.out.println("4. 사용종료");
+                System.out.println("4. 로그아웃");
 
                 Scanner input = new Scanner(System.in);
                 int menuSelect = input.nextInt();
@@ -43,10 +43,10 @@ public class MenuManager {
                     case SELECT4:
                         System.out.println("로그아웃 하시겠습니까? Y | N");
                         String s = input.nextLine();
-                        if(s.equals("Y")){
+                        if(s.toUpperCase().trim().equals("Y")){
                             this.currentUser = null;
                             endFlag = true;
-                            System.out.println("로그아웃");
+                            System.out.println("로그아웃 되었습니다");
                             break;
                         }
                 }

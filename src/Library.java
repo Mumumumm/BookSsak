@@ -1,3 +1,5 @@
+import DBConnect.User;
+
 import java.util.Scanner;
 
 public class Library {
@@ -6,9 +8,9 @@ public class Library {
     private final int SELECT3 = 3;
     private final int SELECT4 = 4;
 
-    private MenuManager mMenu;
+    private User currentUser = null;
 
-    public Library(MenuManager menu) {
+    public Library() {
 
     }
 
@@ -19,8 +21,9 @@ public class Library {
         System.out.println("===================");
         System.out.println("1. 베스트셀러");
         System.out.println("2. 도서 검색하기");
-        System.out.println("3. 기분에 따른 도서 추천 목록");
-        System.out.println("4. 메뉴로 가기");
+        System.out.println("3. 오늘은 뭘 읽을까?");
+        System.out.println("4. 찜 목록");
+        System.out.println("5. 메뉴로 가기");
 
         int select = input.nextInt();
         System.out.println();// ❗줄띄우기용
@@ -36,8 +39,23 @@ public class Library {
 
                 break;
             case SELECT4:
-                mMenu.MenuSelect();
-                break;
+                return;
         }
+    }
+
+    public void bestSeller(){
+
+    }
+
+    public void search(){
+
+    }
+
+    public void keyWord(){
+
+    }
+
+    public void wishList(){
+
     }
 }
