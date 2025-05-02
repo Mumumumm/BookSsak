@@ -8,9 +8,7 @@ public class FootPrints {
 
     private MenuManager mMenu;
 
-    public FootPrints(MenuManager menu) {
-        this.mMenu = menu;
-    }
+    public FootPrints(MenuManager menu) {}
 
     public void FooPrintsMenu() {
         Scanner input = new Scanner(System.in);

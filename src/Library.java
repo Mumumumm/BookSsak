@@ -9,7 +9,7 @@ public class Library {
     private MenuManager mMenu;
 
     public Library(MenuManager menu) {
-        this.mMenu = menu;
+
     }
 
     public void LibraryMenu() {

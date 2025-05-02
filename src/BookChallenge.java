@@ -6,10 +6,9 @@ public class BookChallenge {
     private final int SELECT3 = 3;
     private final int SELECT4 = 4;
 
-    private MenuManager mMenu;
+    MenuManager mMenu = new MenuManager();
 
-    public BookChallenge(MenuManager menu) {
-        this.mMenu = menu;
+    public BookChallenge() {
     }
 
     public void BookChallengeMenu() {
