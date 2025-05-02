@@ -1,8 +1,9 @@
 package DBConnect;
 
-
 import java.sql.*;
 import java.util.HashMap;
+import java.util.Map;
+import java.util.Scanner;
 
 public class DBConnect {
     private String driver = "com.mysql.cj.jdbc.Driver";
@@ -11,6 +12,8 @@ public class DBConnect {
     private String password = "1234";
     private Connection conn = null;
     private Statement stmt = null;
+    private int totalPage;
+
 
     public DBConnect() {
     }
@@ -60,7 +63,7 @@ public class DBConnect {
                     Date userBirth = rs.getDate("birth");
                     loginUser = new User(userId, userName, userBirth);
                     System.out.println("========================");
-                    System.out.println("안녕하세요 " + loginUser.getUserName() + " 님");
+                    System.out.println("안녕하세요 " + loginUser.getUserName() + " 님👨‍👩‍👧‍👦");
                     System.out.println("========================");
                 } else {
                     System.out.println("계정 정보가 잘못되었습니다.");
@@ -127,5 +130,52 @@ public class DBConnect {
             e.printStackTrace();
         }
     }
+
+
+    // 이모지
+    public String reandomEmoji (){
+        int r = (int) (Math.random() * 5);
+        String[] emojibook = new String[5];
+        emojibook[0] = "📕";
+        emojibook[1] = "📗";
+        emojibook[2] = "📘";
+        emojibook[3] = "📙";
+        emojibook[4] = "📒";
+
+        return emojibook[r];
+    }
+
+    // 누적시간 메서드
+    public void saveUserTime(User user) {
+        try {
+            initDBConnect(); // 커넥션 열기
+            String sql = "UPDATE users SET reading_time = ? WHERE userid = ?";
+            PreparedStatement pstmt = conn.prepareStatement(sql);
+
+            int totalSeconds = user.getTotalSeconds();
+            String formattedTime = String.format("%02d:%02d:%02d",
+                    totalSeconds / 3600,
+                    (totalSeconds % 3600) / 60,
+                    totalSeconds % 60);
+
+            pstmt.setString(1, formattedTime); // TIME 타입은 문자열 형식 "HH:MM:SS" 가능
+            pstmt.setString(2, user.getUserId());
+
+            pstmt.executeUpdate();
+            pstmt.close();
+            releaseDB(); // 커넥션 닫기
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    // 쪽수 기록하기
+    public int reading_page(){
+        Scanner input = new Scanner(System.in);
+        System.out.println("오늘 읽은 쪽수 기록");
+        int readePage = input.nextInt();
+        return totalPage += readePage;
+    }
+
 
 }

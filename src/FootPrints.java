@@ -1,3 +1,4 @@
+import DBConnect.DBConnect;
 import DBConnect.User;
 
 import java.util.Scanner;
@@ -9,10 +10,11 @@ public class FootPrints {
     private final int SELECT4 = 4;
 
     private User currentUser = null;
+    private DBConnect db = new DBConnect();
 
     public FootPrints() {}
 
-    public void FooPrintsMenu() {
+    public void fooPrintsMenu() {
         Scanner input = new Scanner(System.in);
         System.out.println("===================");
         System.out.println("[독서 발자취]");
@@ -40,7 +42,10 @@ public class FootPrints {
         }
     }
     public void myBookList(){
+//        DBConnect db = new DBConnect();
+//        db.initDBConnect();
 
+//        db.releaseDB();
     }
 
     public void myBookStatistics(){
@@ -48,6 +53,6 @@ public class FootPrints {
     }
 
     public void rank(){
-        
+
     }
 }

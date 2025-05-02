@@ -1,5 +1,10 @@
+import DBConnect.DBConnect;
 import DBConnect.User;
+import DBConnect.Book;
 
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.Map;
 import java.util.Scanner;
 
 public class Library {
@@ -14,7 +19,7 @@ public class Library {
 
     }
 
-    public void LibraryMenu() {
+    public void libraryMenu() {
         Scanner input = new Scanner(System.in);
         System.out.println("===================");
         System.out.println("[라이브러리]");
@@ -33,7 +38,7 @@ public class Library {
 
                 break;
             case SELECT2:
-
+                this.search();
                 break;
             case SELECT3:
 
@@ -48,6 +53,29 @@ public class Library {
     }
 
     public void search(){
+        System.out.println("검색할 도서 제목을 입력해주세요");
+        Scanner input = new Scanner(System.in);
+        String bookname = input.nextLine();
+
+        DBConnect db = new DBConnect();
+        db.initDBConnect();
+        HashMap<String, Book> resultList = db.searchBook(bookname);
+        Iterator<Map.Entry<String, Book>> iterator = resultList.entrySet().iterator();
+        while (iterator.hasNext()){
+            Map.Entry<String, Book> entry = iterator.next();
+            System.out.println("========================================================");
+            System.out.println("bookNo." + entry.getValue().getBookid() + db.reandomEmoji());
+            System.out.println("책 제목 : " + entry.getValue().getTitle());
+            System.out.println("책 저자 : " + entry.getValue().getAuthor());
+            System.out.println("출판사 : " + entry.getValue().getPublisher());
+            System.out.println("한 줄 소개 : " + entry.getValue().getIntroduce());
+            System.out.println("카테고리 : " + entry.getValue().getCategory());
+            System.out.println("책 키워드 : " + entry.getValue().getKeyword());
+            System.out.println("페이지 수 : " + entry.getValue().getPages() + "쪽");
+            System.out.println("========================================================");
+
+        }
+        db.releaseDB();
 
     }
 

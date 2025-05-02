@@ -12,15 +12,22 @@ public class MenuManager {
     private User currentUser = null;
 
     public void menuSelect() {
+        System.out.println();
+        System.out.println("북싹 읽었수다\n");
+        System.out.println("*******************************");
+        System.out.println("Welcome to BookSsak");
+        System.out.println("*******************************\n");
         while (true) {
              this.login();
             while (this.currentUser!=null){
                 Boolean endFlag = false;
-                System.out.println("[메뉴 선택]");
-                System.out.println("1. 도서 챌린지");
+                System.out.println("[📋메뉴 선택]");
+                System.out.println("1. 독서 챌린지");
                 System.out.println("2. 독서 발자취");
                 System.out.println("3. 라이브러리");
                 System.out.println("4. 로그아웃");
+                System.out.println();
+                System.out.print("메뉴선택 : ");
 
                 Scanner input = new Scanner(System.in);
                 int menuSelect = input.nextInt();
@@ -63,10 +70,12 @@ public class MenuManager {
 
     public void login() {
         Scanner s = new Scanner(System.in);
-        System.out.println("아이디를 입력하세요.");
+        System.out.println("[🔑로그인]");
+        System.out.print("아이디 : ");
         String inputId = s.nextLine();
-        System.out.println("비밀번호를 입력하세요.");
+        System.out.print("비밀번호 : ");
         String inputPw = s.nextLine();
+        System.out.println();
         DBConnect db = new DBConnect();
         db.initDBConnect();
         this.currentUser = db.checkLogin(inputId, inputPw);
