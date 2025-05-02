@@ -18,6 +18,7 @@ public class Library {
     private final int SELECT2 = 2;
     private final int SELECT3 = 3;
     private final int SELECT4 = 4;
+    private final int SELECT5 = 5;
 
     public void libraryMenu() {
         Scanner input = new Scanner(System.in);
@@ -44,6 +45,9 @@ public class Library {
                 this.moodBasedBookRecommender();
                 break;
             case SELECT4:
+                this.wishlist();
+                break;
+            case SELECT5:
                 return;
         }
     }
@@ -226,8 +230,44 @@ public class Library {
     public void wishlist() {
         DBConnect db = new DBConnect();
         db.initDBConnect();
-        // 찜 목록 리스트
-        // 찜 삭제
+
+        HashMap<String, Book> wishList = db.selectWishList(currentUser.getUserId());
+
+        System.out.println("[내가 찜한 리스트]");
+        if (wishList.isEmpty()) {
+            System.out.println("찜 리스트가 비어 있습니다.");
+            db.releaseDB(); // 비어 있을 시 디비 연결 해제 후 종료
+            return;
+        }
+
+        Iterator<Map.Entry<String, Book>> iterator = wishList.entrySet().iterator();
+        int count = 1;
+        while (iterator.hasNext()) {
+            Map.Entry<String, Book> entry = iterator.next();
+            String key = entry.getKey();
+            Book book = entry.getValue();
+            System.out.println(count + ". " + key + " / " + book.getTitle() + " / " + book.getAuthor() + " / " + book.getPublisher() );
+            count++;
+        }
+        System.out.println("==========================================");
+
+        Scanner input = new Scanner(System.in);
+        System.out.println("찜 목록에서 삭제 (Y / N)");
+        String yn = input.nextLine();
+        String removeWish = "";
+
+        if (yn.equalsIgnoreCase("Y")) {
+            System.out.println("찜 목록에서 삭제할 책의 ISBN을 입력해주세요.");
+            removeWish = input.nextLine();
+            if (!wishList.containsKey(removeWish)) {
+                System.out.println("잘못된 ISBN입니다.");
+                db.releaseDB(); // 잘못 입력 시 디비 연결 해제 후 종료
+                return;
+            }
+        }
+        db.deleteWishList(currentUser.getUserId(), wishList.get(removeWish));
+
+
         db.releaseDB();
     }
 }
