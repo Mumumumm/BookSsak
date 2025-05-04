@@ -25,7 +25,7 @@ public class Library {
         System.out.println("===================");
         System.out.println("[라이브러리]");
         System.out.println("===================");
-        System.out.println("1. 베스트셀러");
+        System.out.println("1. 인기 도서");
         System.out.println("2. 도서 검색하기");
         System.out.println("3. 오늘은 뭘 읽을까?");
         System.out.println("4. 찜 목록");
@@ -73,6 +73,12 @@ public class Library {
         String search = input.nextLine();
 
         HashMap<String, Book> resultBooks = db.searchBook(search);
+
+        if (resultBooks.isEmpty()) {
+            System.out.println();
+            db.releaseDB();
+            return;
+        }
 
         System.out.println("\n==========================================");
         Iterator<Map.Entry<String, Book>> iterator = resultBooks.entrySet().iterator();
@@ -235,7 +241,7 @@ public class Library {
 
         System.out.println("[내가 찜한 리스트]");
         if (wishList.isEmpty()) {
-            System.out.println("찜 리스트가 비어 있습니다.");
+            System.out.println("찜 리스트가 비어 있습니다.\n");
             db.releaseDB(); // 비어 있을 시 디비 연결 해제 후 종료
             return;
         }
@@ -256,6 +262,12 @@ public class Library {
         String yn = input.nextLine();
         String removeWish = "";
 
+        if (yn.equalsIgnoreCase("N")) {
+            db.releaseDB();
+            libraryMenu();
+            return;
+        }
+
         if (yn.equalsIgnoreCase("Y")) {
             System.out.println("찜 목록에서 삭제할 책의 ISBN을 입력해주세요.");
             removeWish = input.nextLine();
@@ -264,9 +276,8 @@ public class Library {
                 db.releaseDB(); // 잘못 입력 시 디비 연결 해제 후 종료
                 return;
             }
+            db.deleteWishList(currentUser.getUserId(), wishList.get(removeWish));
         }
-        db.deleteWishList(currentUser.getUserId(), wishList.get(removeWish));
-
 
         db.releaseDB();
     }
