@@ -5,7 +5,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Scanner;
 
-public class DBConnect {
+public class DBFoot {
     private String driver = "com.mysql.cj.jdbc.Driver";
     private String url = "jdbc:mysql://127.0.0.1:3306/booksak?serverTimeZone=UTC";
     private String user = "root";
@@ -14,7 +14,7 @@ public class DBConnect {
     private Statement stmt = null;
 
 
-    public DBConnect() {
+    public DBFoot() {
     }
 
     public void initDBConnect() {
@@ -85,7 +85,7 @@ public class DBConnect {
             e.printStackTrace();
         }
     }
-/// 독서 시작
+    /// 독서 시작
     public void updateReadRecord(String userid, String time, int page) {
         try {
             String sql = "UPDATE userlibrary SET reading_time = ADDTIME(reading_time, ?), read_pages = read_pages + ?, end_date = curdate() WHERE userid = ? and current = true";

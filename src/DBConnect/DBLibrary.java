@@ -2,10 +2,8 @@ package DBConnect;
 
 import java.sql.*;
 import java.util.HashMap;
-import java.util.Map;
-import java.util.Scanner;
 
-public class DBConnect {
+public class DBLibrary{
     private String driver = "com.mysql.cj.jdbc.Driver";
     private String url = "jdbc:mysql://127.0.0.1:3306/booksak?serverTimeZone=UTC";
     private String user = "root";
@@ -14,7 +12,7 @@ public class DBConnect {
     private Statement stmt = null;
 
 
-    public DBConnect() {
+    public DBLibrary() {
     }
 
     public void initDBConnect() {
@@ -28,130 +26,6 @@ public class DBConnect {
             e.printStackTrace();
         }
     }
-
-    public User checkLogin(String inputId, String inputPw) {
-        User loginUser = null;
-        String sql = "select * from users where userid = ? and userpw = ?";
-        try (PreparedStatement pstmt = this.conn.prepareStatement(sql)) {
-            pstmt.setString(1, inputId);
-            pstmt.setString(2, inputPw);
-            try (ResultSet rs = pstmt.executeQuery()) {
-                if (rs.next()) {
-                    String userId = rs.getString("userid");
-                    String userName = rs.getString("username");
-                    Date userBirth = rs.getDate("birth");
-                    loginUser = new User(userId, userName, userBirth);
-                    System.out.println("로그인 성공");
-                } else {
-                    System.out.println("계정 정보가 잘못되었습니다.");
-                    return null;
-                }
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
-            System.out.println("데이터베이스 오류가 발생했습니다.");
-        }
-        return loginUser;
-    }
-
-    /// /////////////////////////////로그인 끝//////////////////////////////////////////////////
-    /// /////////////////////////////독서 첼린지 시작//////////////////////////////////////////////////
-
-    public void currentReadBook(String userid) {
-        String sql = "select count(*) as count from userlibrary where userid = ? and current = true";
-        String sql2 = "select * from userlibrary where userid = ? and current = true";
-        try {
-            PreparedStatement pstmt = this.conn.prepareStatement(sql);
-            pstmt.setString(1, userid);
-            ResultSet rs = pstmt.executeQuery();
-            if(rs.next()) {
-                if (rs.getInt("count") == 0) {
-                    System.out.println("현재 읽고 있는 책이 없어요.");
-                    return;
-                }
-            }
-            PreparedStatement pstmt2 = this.conn.prepareStatement(sql2);
-            pstmt2.setString(1, userid);
-            ResultSet rs2 = pstmt2.executeQuery();
-            rs2.next();
-            System.out.println(rs2.getString("title"));
-            System.out.println(rs2.getString("author"));
-            System.out.println(rs2.getTime("reading_time"));
-            System.out.println(rs2.getInt("read_pages"));
-            System.out.println(rs2.getInt("pages"));
-            System.out.println(rs2.getDate("start_date"));
-            System.out.println(rs2.getDate("end_date"));
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-    }
-/// 독서 시작
-    public void updateReadRecord(String userid, String time, int page) {
-        try {
-            String sql = "UPDATE userlibrary SET reading_time = ADDTIME(reading_time, ?), read_pages = read_pages + ?, end_date = curdate() WHERE userid = ? and current = true";
-            PreparedStatement pstmt = conn.prepareStatement(sql);
-
-            pstmt.setString(1, time); // TIME 타입은 문자열 형식 "HH:MM:SS" 가능
-            pstmt.setInt(2, page);
-            pstmt.setString(3, userid);
-            pstmt.executeUpdate();
-
-            pstmt.close();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
-    // 책 등록
-    public boolean inputReadBook(String userid, String bookid) {
-        String sql = "update userlibrary set current = true, start_date = curdate() where userid = ? and bookid = ?";
-        String sql2 = "select count(*) as count from userlibrary where current = true and userid = ?";
-        try {
-            PreparedStatement pstmt2 = this.conn.prepareStatement(sql2);
-            pstmt2.setString(1, userid);
-            pstmt2.executeQuery();
-            ResultSet rs = pstmt2.getResultSet();
-            if(rs.next()){
-                if(rs.getInt("count")>0){
-                    System.out.println("이미 읽고있는 책이 있습니다.");
-                    return false;
-                }
-            }
-            PreparedStatement pstmt = this.conn.prepareStatement(sql);
-            pstmt.setString(1, userid);
-            pstmt.setString(2, bookid);
-            int rowsAffected = pstmt.executeUpdate();
-            if (rowsAffected > 1) {
-                return false;
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-        return true;
-    }
-
-    public boolean changeReadBook(String userId, String bookId){
-        String sql = "update userlibrary set current = false where userid = ? and current = true";
-        String sql2 = "update userlibrary set current = true where userid = ? and bookid = ?";
-        try {
-            PreparedStatement pstmt = this.conn.prepareStatement(sql);
-            pstmt.setString(1, userId);
-            pstmt.executeUpdate();
-            PreparedStatement pstmt2 = this.conn.prepareStatement(sql2);
-            pstmt2.setString(1, userId);
-            pstmt2.setString(2, bookId);
-            pstmt2.executeUpdate();
-        }
-        catch (SQLException e){
-            e.printStackTrace();
-            return false;
-        }
-        return true;
-    }
-    /// /////////////////////////////독서 첼린지 끝//////////////////////////////////////////////////
-    /// /////////////////////////////내 통계 시작
-    /// 언제만들지 히히
-    /// /////////////////////////////내 통계 끝
-    /// //////////////////////////////라이브러리 시작/////////////////////////////////////////////////
 
     public void inputWishList(String userid, Book book) {
         String checkSql = "select count(*) as count from userlibrary where userid = ? and bookid = ?"; // 중복체크 쿼리
@@ -303,39 +177,6 @@ public class DBConnect {
         return recommenderBook;
     }
 
-    public HashMap<String, Book> getPopularBooks() {
-        HashMap<String, Book> popularBooks = new HashMap<>();
-        String sql = "select b.bookid, b.title, b.author, b.publisher, b.introduce, b.category, b.keyword, b.pages, count(*) as read_count " +
-                "from userlibrary u " +
-                "join books b on u.bookid = b.bookid " +
-                "where u.start_date is not null " +
-                "group by b.bookid " +
-                "order by read_count desc " +
-                "limit 5";
-
-        try (PreparedStatement pstmt = this.conn.prepareStatement(sql)) {
-            ResultSet rs = pstmt.executeQuery();
-            while (rs.next()) {
-                String bookid = rs.getString("bookid");
-                String title = rs.getString("title");
-                String author = rs.getString("author");
-                String publisher = rs.getString("publisher");
-                String introduce = rs.getString("introduce");
-                String category = rs.getString("category");
-                String keyword = rs.getString("keyword");
-                int pages = rs.getInt("pages");
-
-                popularBooks.put(bookid, new Book(bookid, title, author, publisher, introduce, category, keyword, pages));
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-        return popularBooks;
-    }
-
-    /// //////////////////////////////라이브러리 끝/////////////////////////////////////////////////
-
-
     public void releaseDB() {
         try {
             this.stmt.close();
@@ -345,22 +186,4 @@ public class DBConnect {
             e.printStackTrace();
         }
     }
-
-
-    // 이모지
-    public String reandomEmoji() {
-        int r = (int) (Math.random() * 5);
-        String[] emojibook = new String[5];
-        emojibook[0] = "📕";
-        emojibook[1] = "📗";
-        emojibook[2] = "📘";
-        emojibook[3] = "📙";
-        emojibook[4] = "📒";
-
-        return emojibook[r];
-    }
-
-    // 누적시간 메서드
-
-
 }

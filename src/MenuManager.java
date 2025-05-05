@@ -42,13 +42,12 @@ public class MenuManager {
 
                     case SELECT2:
                         FootPrints footPrints = new FootPrints();
-                        footPrints.fooPrintsMenu();
+                        footPrints.fooPrintsMenu(this.currentUser);
                         break;
 
                     case SELECT3:
                         Library live = new Library();
-                        live.libraryMenu();
-
+                        live.libraryMenu(this.currentUser);
                         break;
 
                     case SELECT4:

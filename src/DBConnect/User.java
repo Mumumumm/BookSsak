@@ -6,7 +6,6 @@ public class User {
     private String userId;
     private String userName;
     private Date userBirth;
-    private int totalSeconds = 0;
     public Book currentBook = null;
 
     public User(String userId, String userName, Date userBirth) {
@@ -27,12 +26,4 @@ public class User {
         return userBirth;
     }
 
-
-    public void addReadingTime(int seconds) {
-        this.totalSeconds += seconds; // ✅ 누적합 내부에서 처리
-    }
-
-    public int getTotalSeconds() {
-        return totalSeconds;
-    }
 }

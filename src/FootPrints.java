@@ -9,12 +9,10 @@ public class FootPrints {
     private final int SELECT3 = 3;
     private final int SELECT4 = 4;
 
-    private User currentUser = null;
-    private DBConnect db = new DBConnect();
 
     public FootPrints() {}
 
-    public void fooPrintsMenu() {
+    public void fooPrintsMenu(User currentUser) {
         Scanner input = new Scanner(System.in);
         System.out.println("===================");
         System.out.println("[독서 발자취]");
