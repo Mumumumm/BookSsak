@@ -364,37 +364,4 @@ public class DBFoot {
     }
 
 
-
-//    // 통계
-//    public void myTotalRecoed(String userid) {
-//        String sql = "select" +
-//                "count(*) as total_books " +
-//                "sum(read_pages) as total_pages" +
-//                "sum(reading_time) as total_time" +
-//                "from userlibrary" +
-//                "where userid = ? and start_date is not null";
-//        try (PreparedStatement pstmt = conn.prepareStatement(sql)) {
-//            ; // PreparedStatement 미리 준비
-//            pstmt.setString(1, userid);
-//            ResultSet rs = pstmt.executeQuery();
-//
-//            if (rs.next()) {
-//                int totalBooks = rs.getInt("total_books");
-//                int totalPages = rs.getInt("total_pages");
-//                Time totalTime = rs.getTime("total_time");
-//
-//                System.out.println("📚 총 읽은 책 수: " + totalBooks);
-//                System.out.println("📄 총 읽은 페이지 수: " + totalPages);
-//                System.out.println("⏰ 총 독서 시간: " + totalTime);
-//            } else {
-//                System.out.println("독서 기록이 없습니다.");
-//            }
-//
-//        } catch (SQLException e) {
-//            e.printStackTrace();
-//            System.out.println("오류");
-//        }
-//    }
-
-
 }
