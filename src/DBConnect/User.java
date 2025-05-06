@@ -24,4 +24,5 @@ public class User {
     public Date getUserBirth() {
         return userBirth;
     }
+
 }

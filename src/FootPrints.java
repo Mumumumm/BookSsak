@@ -8,11 +8,10 @@ public class FootPrints {
     private final int SELECT3 = 3;
     private final int SELECT4 = 4;
 
-    private User currentUser = null;
 
     public FootPrints() {}
 
-    public void fooPrintsMenu() {
+    public void fooPrintsMenu(User currentUser) {
         Scanner input = new Scanner(System.in);
         System.out.println("===================");
         System.out.println("[독서 발자취]");
@@ -40,7 +39,10 @@ public class FootPrints {
         }
     }
     public void myBookList(){
+//        DBConnect db = new DBConnect();
+//        db.initDBConnect();
 
+//        db.releaseDB();
     }
 
     public void myBookStatistics(){
