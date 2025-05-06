@@ -1,3 +1,5 @@
+import DBConnect.DBConnect;
+
 import java.util.Scanner;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
@@ -8,7 +10,7 @@ public class Timer {
     private final AtomicBoolean running = new AtomicBoolean(true);
     private long startTimeMillis; // 시작 시간을 밀리초로 저장
     // Timer
-    public ResultReadBook bookTimer(){
+    public ResultReadBook bookTimer(String userid){
         ScheduledExecutorService executor = Executors.newSingleThreadScheduledExecutor();
         Scanner scanner = new Scanner(System.in);
         System.out.println("⏰독서 시작! 중지하려면 Enter 키를 누르세요");
@@ -85,7 +87,18 @@ public class Timer {
         System.out.println("읽은 페이지 수 작성");
         int pages = input.nextInt();
         input.nextLine();
-        System.out.println("챌린지가 종료되었습니다 짝짝짝");
+
+        DBConnect db = new DBConnect();
+        db.initDBConnect();
+
+        db.updateReadRecord(userid, finalFormattedTime);
+        db.updateReadPage(userid, pages);
+        int totalPages = db.getTotalPages(userid);
+        if (pages == totalPages) {
+            db.updateEndDate(userid);
+        }
+
+        db.releaseDB();
 
         return new ResultReadBook(finalFormattedTime, pages);
     }

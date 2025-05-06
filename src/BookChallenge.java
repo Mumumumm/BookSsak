@@ -64,10 +64,11 @@ public class BookChallenge {
 
     public void startReadBook(String userid) {
         Timer timer = new Timer();
-        ResultReadBook result = timer.bookTimer(); // 시간, 페이지 result에 리턴
+        ResultReadBook result = timer.bookTimer(userid); // 시간, 페이지 result에 리턴
         DBConnect db = new DBConnect();
         db.initDBConnect();
-        db.updateReadRecord(userid, result.getReadTime(), result.getReadPages());
+        db.updateReadRecord(userid, result.getReadTime());
+        db.updateReadPage(userid, result.getReadPages());
         db.releaseDB();
     }
 
