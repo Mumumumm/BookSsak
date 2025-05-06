@@ -13,9 +13,9 @@ public class MenuManager {
 
     public void menuSelect() {
         System.out.println();
-        System.out.println("북싹 읽었수다\n");
         System.out.println("*******************************");
-        System.out.println("Welcome to BookSsak");
+        System.out.println("\t\t북싹 읽었수다");
+        System.out.println("\t  Welcome to BookSsak");
         System.out.println("*******************************\n");
         while (true) {
              this.login();
@@ -42,13 +42,12 @@ public class MenuManager {
 
                     case SELECT2:
                         FootPrints footPrints = new FootPrints();
-                        footPrints.fooPrintsMenu();
+                        footPrints.fooPrintsMenu(this.currentUser);
                         break;
 
                     case SELECT3:
                         Library live = new Library();
-                        live.libraryMenu();
-
+                        live.libraryMenu(this.currentUser);
                         break;
 
                     case SELECT4:

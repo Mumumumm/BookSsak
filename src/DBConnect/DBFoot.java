@@ -4,8 +4,9 @@ import java.sql.*;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Scanner;
+import java.util.Timer;
 
-public class DBConnect {
+public class DBFoot {
     private String driver = "com.mysql.cj.jdbc.Driver";
     private String url = "jdbc:mysql://127.0.0.1:3306/booksak?serverTimeZone=UTC";
     private String user = "root";
@@ -14,7 +15,7 @@ public class DBConnect {
     private Statement stmt = null;
 
 
-    public DBConnect() {
+    public DBFoot() {
     }
 
     public void initDBConnect() {
@@ -64,7 +65,7 @@ public class DBConnect {
             PreparedStatement pstmt = this.conn.prepareStatement(sql);
             pstmt.setString(1, userid);
             ResultSet rs = pstmt.executeQuery();
-            if(rs.next()) {
+            if (rs.next()) {
                 if (rs.getInt("count") == 0) {
                     System.out.println("현재 읽고 있는 책이 없어요.");
                     return;
@@ -74,19 +75,19 @@ public class DBConnect {
             pstmt2.setString(1, userid);
             ResultSet rs2 = pstmt2.executeQuery();
             rs2.next();
-            System.out.println("제목 / " + rs2.getString("title"));
-            System.out.println("저자 / " + rs2.getString("author"));
-            System.out.println("누적 시간 / " + rs2.getTime("reading_time"));
-            System.out.println("읽은 페이지 / " + rs2.getInt("read_pages"));
-            System.out.println("총 페이지 / " + rs2.getInt("pages"));
-            System.out.println("읽기 시작한 날짜 / " + rs2.getDate("start_date"));
-            System.out.println("마지막으로 읽은 날짜 / " + rs2.getDate("end_date"));
-            System.out.println();
+            System.out.println(rs2.getString("title"));
+            System.out.println(rs2.getString("author"));
+            System.out.println(rs2.getTime("reading_time"));
+            System.out.println(rs2.getInt("read_pages"));
+            System.out.println(rs2.getInt("pages"));
+            System.out.println(rs2.getDate("start_date"));
+            System.out.println(rs2.getDate("end_date"));
         } catch (SQLException e) {
             e.printStackTrace();
         }
     }
-/// 독서 시작
+
+    /// 독서 시작
     public void updateReadRecord(String userid, String time, int page) {
         try {
             String sql = "UPDATE userlibrary SET reading_time = ADDTIME(reading_time, ?), read_pages = read_pages + ?, end_date = curdate() WHERE userid = ? and current = true";
@@ -102,6 +103,7 @@ public class DBConnect {
             e.printStackTrace();
         }
     }
+
     // 책 등록
     public boolean inputReadBook(String userid, String bookid) {
         String sql = "update userlibrary set current = true, start_date = curdate() where userid = ? and bookid = ?";
@@ -111,8 +113,8 @@ public class DBConnect {
             pstmt2.setString(1, userid);
             pstmt2.executeQuery();
             ResultSet rs = pstmt2.getResultSet();
-            if(rs.next()){
-                if(rs.getInt("count")>0){
+            if (rs.next()) {
+                if (rs.getInt("count") > 0) {
                     System.out.println("이미 읽고있는 책이 있습니다.");
                     return false;
                 }
@@ -130,7 +132,7 @@ public class DBConnect {
         return true;
     }
 
-    public boolean changeReadBook(String userId, String bookId){
+    public boolean changeReadBook(String userId, String bookId) {
         String sql = "update userlibrary set current = false where userid = ? and current = true";
         String sql2 = "update userlibrary set current = true where userid = ? and bookid = ?";
         try {
@@ -141,13 +143,13 @@ public class DBConnect {
             pstmt2.setString(1, userId);
             pstmt2.setString(2, bookId);
             pstmt2.executeUpdate();
-        }
-        catch (SQLException e){
+        } catch (SQLException e) {
             e.printStackTrace();
             return false;
         }
         return true;
     }
+
     /// /////////////////////////////독서 첼린지 끝//////////////////////////////////////////////////
     /// /////////////////////////////내 통계 시작
     /// 언제만들지 히히
@@ -162,7 +164,7 @@ public class DBConnect {
             checkDuplicate.setString(1, userid);
             checkDuplicate.setString(2, book.getBookid());
             ResultSet rs = checkDuplicate.executeQuery();
-            if(rs.next()){
+            if (rs.next()) {
                 if (rs.getInt("count") > 0) {
                     System.out.println("이미 찜목록에 있는 책입니다.");
                     return;
@@ -179,14 +181,14 @@ public class DBConnect {
             pstmt.setString(8, book.getKeyword());
             pstmt.setInt(9, book.getPages());
             pstmt.executeUpdate(); // 찜목록 insert 끝
-            System.out.println(book.getTitle() + " 이(가) 찜목록에 추가되었습니다.");
+            System.out.println(book.getTitle() + "이 찜목록에 추가되었습니다.");
         } catch (SQLException e) {
             e.printStackTrace();
         } catch (Exception e) {
             e.printStackTrace();
             return;
         }
-        System.out.println(book.getTitle() + " / " + book.getAuthor() + " 이(가) 찜목록에 추가되었습니다.");
+        System.out.println(book.getTitle() + "\t" + book.getAuthor() + "이 찜목록에 추가되었습니다.");
     }
 
     public HashMap<String, Book> selectWishList(String userid) {
@@ -224,7 +226,7 @@ public class DBConnect {
             isPstmt.setString(1, userid);
             isPstmt.setString(2, book.getBookid());
             ResultSet rs = isPstmt.executeQuery();
-            if(rs.next()){
+            if (rs.next()) {
                 if (rs.getInt("count") == 0) {
                     System.out.println("책을 찾을 수 없습니다.");
                     return;
@@ -234,7 +236,7 @@ public class DBConnect {
             pstmt.setString(1, userid);
             pstmt.setString(2, book.getBookid());
             pstmt.executeUpdate();
-            System.out.println(book.getTitle() + " 이(가) 서재에서 삭제되었습니다.");
+            System.out.println(book.getTitle() + "이 서재에서 삭제되었습니다.");
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -362,49 +364,37 @@ public class DBConnect {
     }
 
 
-    /// ///////////////////////////////////발 자취//////////////////////////////////////////////
-    // 통계
-    public void myTotalRecoed(String userid) {
-        String sql = "select " +
-                "count(*) as total_books, " +
-                "sum(read_pages) as total_pages, " +
-                "sec_to_time(sum(reading_time)) as total_time " +
-                "from userlibrary " +
-                "where userid = ? and start_date is not null";
-        try (PreparedStatement pstmt = conn.prepareStatement(sql)) {
-            ; // PreparedStatement 미리 준비
-            pstmt.setString(1, userid);
-            ResultSet rs = pstmt.executeQuery();
 
-            if (rs.next()) {
-                int totalBooks = rs.getInt("total_books");
-                int totalPages = rs.getInt("total_pages");
-                String totalTime = rs.getString("total_time");
-
-                System.out.println("📚 총 읽은 책 수: " + totalBooks);
-                System.out.println("📄 총 읽은 페이지 수: " + totalPages);
-
-                // 시간, 분, 초 계산
-                int totalTimeInSeconds = 0;
-                int hours = totalTimeInSeconds / 3600;
-                int minutes = (totalTimeInSeconds % 3600) / 60;
-                int seconds = totalTimeInSeconds % 60;
-
-                // "HH:MM:SS" 형식으로 출력
-                String formattedTime = String.format("%02d:%02d:%02d", hours, minutes, seconds);
-                
-                System.out.println("⏰ 총 독서 시간: " + totalTime);
-            } else {
-                System.out.println("독서 기록이 없습니다.");
-            }
-
-        } catch (SQLException e) {
-            e.printStackTrace();
-            System.out.println("오류");
-        }
-        System.out.println();
-    }
-
+//    // 통계
+//    public void myTotalRecoed(String userid) {
+//        String sql = "select" +
+//                "count(*) as total_books " +
+//                "sum(read_pages) as total_pages" +
+//                "sum(reading_time) as total_time" +
+//                "from userlibrary" +
+//                "where userid = ? and start_date is not null";
+//        try (PreparedStatement pstmt = conn.prepareStatement(sql)) {
+//            ; // PreparedStatement 미리 준비
+//            pstmt.setString(1, userid);
+//            ResultSet rs = pstmt.executeQuery();
+//
+//            if (rs.next()) {
+//                int totalBooks = rs.getInt("total_books");
+//                int totalPages = rs.getInt("total_pages");
+//                Time totalTime = rs.getTime("total_time");
+//
+//                System.out.println("📚 총 읽은 책 수: " + totalBooks);
+//                System.out.println("📄 총 읽은 페이지 수: " + totalPages);
+//                System.out.println("⏰ 총 독서 시간: " + totalTime);
+//            } else {
+//                System.out.println("독서 기록이 없습니다.");
+//            }
+//
+//        } catch (SQLException e) {
+//            e.printStackTrace();
+//            System.out.println("오류");
+//        }
+//    }
 
 
 }
