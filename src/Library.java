@@ -18,9 +18,7 @@ import java.util.Scanner;
 
         public void libraryMenu(User currentUser) {
             Scanner input = new Scanner(System.in);
-            System.out.println("===================");
-            System.out.println("[라이브러리]");
-            System.out.println("===================");
+            System.out.println("[\uD83D\uDD0D라이브러리]");
             System.out.println("1. 인기 도서");
             System.out.println("2. 도서 검색하기");
             System.out.println("3. 오늘은 뭘 읽을까?");

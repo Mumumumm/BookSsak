@@ -13,9 +13,9 @@ public class MenuManager {
 
     public void menuSelect() {
         System.out.println();
-        System.out.println("북싹 읽었수다\n");
         System.out.println("*******************************");
-        System.out.println("Welcome to BookSsak");
+        System.out.println("\t\t북싹 읽었수다");
+        System.out.println("\t  Welcome to BookSsak");
         System.out.println("*******************************\n");
         while (true) {
              this.login();
