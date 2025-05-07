@@ -109,7 +109,9 @@ public class DBConnect {
             System.out.println(progressBar + " " + progressPercent + "%");
 
             // 진행률에 따른 프린트
-            if (progress > 0.8) {
+            if (progress == 1){
+                System.out.println("🎉완독 했습니다!");
+            }else if (progress > 0.8) {
                 System.out.println("🔥 얼마 안남았습니다! ");
             } else if (progress > 0.5) {
                 System.out.println("📖 이제 절반을 넘겼어요! ");
