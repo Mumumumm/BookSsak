@@ -73,13 +73,42 @@ public class DBConnect {
             pstmt2.setString(1, userid);
             ResultSet rs2 = pstmt2.executeQuery();
             rs2.next();
-            System.out.println("제목 / " + rs2.getString("title"));
-            System.out.println("저자 / " + rs2.getString("author"));
-            System.out.println("누적 시간 / " + rs2.getTime("reading_time"));
-            System.out.println("읽은 페이지 / " + rs2.getInt("read_pages"));
-            System.out.println("총 페이지 / " + rs2.getInt("pages"));
-            System.out.println("읽기 시작한 날짜 / " + rs2.getDate("start_date"));
-            System.out.println("마지막으로 읽은 날짜 / " + rs2.getDate("end_date"));
+            // 진행률 만들기
+            int readPages = rs2.getInt("read_pages");
+            int totalPages = rs2.getInt("pages");
+            double progress = (double) readPages / totalPages;
+            String progressPercent = String.format("%.2f", progress * 100);
+            int percentBar = (int) (progress * 10);
+            StringBuilder progressBar = new StringBuilder();
+
+            // 진행률에 따른 프린트
+            if (progress > 0.8) {
+                System.out.println("🔥 얼마 안남았습니다! ");
+            } else if (progress > 0.5) {
+                System.out.println("📖 이제 절반을 넘겼어요! ");
+            } else if (progress > 0.3) {
+                System.out.println("💪 열심히 읽고 있습니다! ");
+            } else {
+                System.out.println("🌱 이제 시작입니다! ");
+            }
+
+            // 내용들
+            System.out.println("제목 : " + rs2.getString("title"));
+            System.out.println("저자 : " + rs2.getString("author"));
+            // 퍼센트 바
+            for (int i = 0; i < 10; i++) {
+                if (i < percentBar) {
+                    progressBar.append("🟩");
+                } else {
+                    progressBar.append("⬜");
+                }
+            }
+            System.out.println(progressBar + " " + progressPercent + "%");
+            System.out.print("읽은 페이지 : " + rs2.getInt("read_pages") + "쪽 / " +
+                    rs2.getInt("pages") + "쪽" +"\n");
+            System.out.println("총 읽은 시간 : " + rs2.getTime("reading_time"));
+            System.out.print("독서 날짜 : " + rs2.getDate("start_date") + " ~ " +
+                    rs2.getDate("end_date") +"\n");
             System.out.println();
         } catch (SQLException e) {
             e.printStackTrace();
@@ -89,14 +118,13 @@ public class DBConnect {
     /// 독서 시작
     public void updateReadRecord(String userid, String time, int page) {
         try {
-            String sql = "UPDATE userlibrary SET reading_time = ADDTIME(reading_time, ?), read_pages = read_pages + ?, end_date = curdate() WHERE userid = ? and current = true";
+            String sql = "UPDATE userlibrary SET reading_time = ADDTIME(reading_time, ?), start_date = NOW(), read_pages = read_pages + ?, end_date = curdate() WHERE userid = ? and current = true";
             PreparedStatement pstmt = conn.prepareStatement(sql);
 
             pstmt.setString(1, time); // TIME 타입은 문자열 형식 "HH:MM:SS" 가능
             pstmt.setInt(2, page);
             pstmt.setString(3, userid);
             pstmt.executeUpdate();
-
             pstmt.close();
         } catch (Exception e) {
             e.printStackTrace();
@@ -347,6 +375,7 @@ public class DBConnect {
         return resultBooks;
     }
 
+
     // 도서 추천 리스트
     public HashMap<String, Book> moodBook(String p_keyword) {
         HashMap<String, Book> recommenderBook = new HashMap<>();
@@ -372,6 +401,7 @@ public class DBConnect {
         }
         return recommenderBook;
     }
+
 
     // 인기 도서 리스트
     public HashMap<String, Book> getPopularBooks() {
@@ -431,7 +461,6 @@ public class DBConnect {
 
         return emojibook[r];
     }
-
 
     /// ///////////////////////////////////발 자취//////////////////////////////////////////////
     // ============================= 독서 발자취 시작 =============================
@@ -542,6 +571,4 @@ public class DBConnect {
 
 
     // ============================= 독서 발자취 끝 =============================
-
-
 }

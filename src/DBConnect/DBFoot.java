@@ -133,6 +133,7 @@ public class DBFoot {
     }
 
     public boolean changeReadBook(String userId, String bookId) {
+
         String sql = "update userlibrary set current = false where userid = ? and current = true";
         String sql2 = "update userlibrary set current = true where userid = ? and bookid = ?";
         try {
@@ -143,7 +144,9 @@ public class DBFoot {
             pstmt2.setString(1, userId);
             pstmt2.setString(2, bookId);
             pstmt2.executeUpdate();
+
         } catch (SQLException e) {
+
             e.printStackTrace();
             return false;
         }
