@@ -68,7 +68,7 @@ public class BookChallenge {
         ResultReadBook result = timer.bookTimer(); // 시간, 페이지 result에 리턴
         DBConnect db = new DBConnect();
         db.initDBConnect();
-        db.updateReadRecord(userid, result.getReadTime(), result.getReadPages());
+        db.updateReadRecord(userid ,result.getReadTime(), result.getReadPages());
         db.releaseDB();
     }
 
@@ -93,10 +93,10 @@ public class BookChallenge {
             System.out.print(" / " + entry.getValue().getCategory());
             System.out.print(" / 총 " + entry.getValue().getPages() + "쪽\n");
             System.out.println(entry.getValue().getIntroduce());
-            System.out.println("==============================================");
+            System.out.println("==================================================");
         }
         try {
-            System.out.print("읽을 책의 isbn을 입력해주세요. ");
+            System.out.print("읽을 책의 ISBN을 입력해주세요. ");
             Scanner s = new Scanner(System.in);
             String inputIsbn = s.nextLine();
             if (!wishList.containsKey(inputIsbn)) {
@@ -107,7 +107,7 @@ public class BookChallenge {
             if (db.inputReadBook(userid, inputIsbn)) {
                 System.out.println(wishList.get(inputIsbn).getTitle() + "(으)로 현재 읽는 책을 변경하였습니다.");
             } else {
-                System.out.println("🚫이미 등록되어 있는 책입니다.");
+                System.out.println("🚫이미 읽고있는 책이 있습니다. 책 바꾸기를 선택해주세요!");
             }
             System.out.println();
             db.releaseDB();
@@ -138,9 +138,9 @@ public class BookChallenge {
             System.out.print(" / " + entry.getValue().getCategory());
             System.out.print(" / 총 " + entry.getValue().getPages() + "쪽\n");
             System.out.println(entry.getValue().getIntroduce());
-            System.out.println("==============================================");
+            System.out.println("==================================================");
         }
-        System.out.print("변경할 책의 isbn을 입력해주세요. ");
+        System.out.print("변경할 책의 ISBN을 입력해주세요. ");
         Scanner s = new Scanner(System.in);
         String inputIsbn = s.nextLine();
         System.out.println();

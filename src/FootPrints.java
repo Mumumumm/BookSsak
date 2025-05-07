@@ -57,9 +57,10 @@ public class FootPrints {
                         " / " + book[2] +
                         " / " + book[3] +
                         " / " + book[4] + "\n");
-                System.out.println("시작일: " + book[5]);
-                System.out.println("종료일: " + book[6]);
-                System.out.println("---------------------------");
+                System.out.println(book[10]);
+                System.out.println("읽은 페이지 : " + book[8] + "쪽 / " + book[7]);
+                System.out.println("독서날짜 : " + book[5] + " ~ " + book[6]);
+                System.out.println("==================================================");
             }
         }
 
@@ -80,6 +81,7 @@ public class FootPrints {
 
         if (bookRank.isEmpty()) {
             System.out.println("📭 다독왕 랭킹이 없습니다.");
+            System.out.println();
         } else {
             System.out.println("🏆 다독왕 랭킹 (Top 5):");
             int rank = 1;
@@ -87,6 +89,7 @@ public class FootPrints {
                 System.out.println(rank + "위: " + user[0] + " - 완독한 책 수: " + user[1]);
                 rank++;
             }
+            System.out.println();
         }
     }
 }

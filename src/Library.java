@@ -22,7 +22,7 @@ import java.util.Scanner;
             System.out.println("1. 인기 도서");
             System.out.println("2. 도서 검색하기");
             System.out.println("3. 오늘은 뭘 읽을까?");
-            System.out.println("4. 찜 목록");
+            System.out.println("4. 내가 찜한 리스트");
             System.out.println("5. 메뉴로 가기");
 
             int select = input.nextInt();
@@ -83,6 +83,8 @@ import java.util.Scanner;
             System.out.println("검색할 도서를 입력하세요.");
             String search = input.nextLine();
 
+            System.out.println();
+            System.out.print("🔍" + "'"+ search +"'" + " 검색 결과");
             HashMap<String, Book> resultBooks = db.searchBook(search);
 
             if (resultBooks.isEmpty()) {
@@ -91,17 +93,20 @@ import java.util.Scanner;
                 return;
             }
 
-            System.out.println("\n==========================================");
             Iterator<Map.Entry<String, Book>> iterator = resultBooks.entrySet().iterator();
-            int count = 1;
             while (iterator.hasNext()) {
                 Map.Entry<String, Book> entry = iterator.next();
                 String key = entry.getKey();
                 Book book = entry.getValue();
-                System.out.println(count + ". " + key + " / " + book.getTitle() + " / " + book.getAuthor() + " / " + book.getPublisher() );
-                count++;
+                System.out.println(db.reandomEmoji() + key +
+                        " / " + book.getTitle() +
+                        " / " + book.getAuthor() +
+                        " / " + book.getPublisher() +
+                        " / " + book.getCategory() +
+                        " / 총" + book.getPages() + "쪽\n" +
+                        book.getIntroduce());
+                System.out.println("==========================================");
             }
-            System.out.println("==========================================");
 
             System.out.println("찜 목록에 추가 (Y / N)");
             String yn = input.nextLine();
@@ -111,7 +116,7 @@ import java.util.Scanner;
                 System.out.println("찜 목록에 추가할 책의 ISBN을 입력해주세요.");
                 addWish = input.nextLine();
                 if (!resultBooks.containsKey(addWish)) {
-                    System.out.println("잘못된 ISBN입니다.");
+                    System.out.println("잘못된 isbn입니다.");
                     db.releaseDB(); // 잘못 입력 시 디비 연결 해제 후 종료
                     return;
                 }
@@ -127,7 +132,7 @@ import java.util.Scanner;
             db.initDBConnect();
 
             System.out.println("[오늘은 뭐 읽을까?]");
-            System.out.println("기분에 따른 도서를 추천해드립니다!\n");
+            System.out.println("😉기분에 따른 도서를 추천해드립니다!\n");
             System.out.println(
                     "모험 | " + "마법 | " + "우정 | " + "신비 | " + "동기부여\n" +
                     "성공 | " + "사랑 | " + "긍정 | " + "가족 | " + "에너지\n" +
@@ -138,6 +143,8 @@ import java.util.Scanner;
             Scanner input = new Scanner(System.in);
             System.out.println("오늘의 감정을 입력하세요.");
             String moodInput = input.nextLine();
+            System.out.println();
+            System.out.print("🔍" + "'"+ moodInput +"'" + " 검색 결과\n");
 
             String keyword = "";
             switch (moodInput) {
@@ -210,20 +217,25 @@ import java.util.Scanner;
             HashMap<String, Book> recommenderBook = db.moodBook(keyword);
 
             System.out.println("==========================================");
-            System.out.println("[책 추천 리스트]");
             Iterator<Map.Entry<String, Book>> iterator = recommenderBook.entrySet().iterator();
             int count = 1;
             while (iterator.hasNext()) {
                 Map.Entry<String, Book> entry = iterator.next();
                 String key = entry.getKey();
                 Book book = entry.getValue();
-                System.out.println(count + ". " + key + " / " + book.getTitle() + " / " + book.getAuthor() + " / " + book.getPublisher() );
+                System.out.println(db.reandomEmoji() + key +
+                        " / " + book.getTitle() +
+                        " / " + book.getAuthor() +
+                        " / " + book.getPublisher() +
+                        " / " + book.getCategory() +
+                        " / 총" + book.getPages() + "쪽\n" +
+                        book.getIntroduce());
+                System.out.println("==========================================");
                 count++;
                 if (count > 5) {
                     break;
                 }
             }
-            System.out.println("==========================================");
 
             System.out.println("찜 목록에 추가 (Y / N)");
             String yn = input.nextLine();
@@ -251,6 +263,7 @@ import java.util.Scanner;
             HashMap<String, Book> wishList = db.selectWishList(userid);
 
             System.out.println("[내가 찜한 리스트]");
+            System.out.println();
             if (wishList.isEmpty()) {
                 System.out.println("찜 리스트가 비어 있습니다.\n");
                 db.releaseDB(); // 비어 있을 시 디비 연결 해제 후 종료
@@ -258,18 +271,23 @@ import java.util.Scanner;
             }
 
             Iterator<Map.Entry<String, Book>> iterator = wishList.entrySet().iterator();
-            int count = 1;
+
             while (iterator.hasNext()) {
                 Map.Entry<String, Book> entry = iterator.next();
                 String key = entry.getKey();
                 Book book = entry.getValue();
-                System.out.println(count + ". " + key + " / " + book.getTitle() + " / " + book.getAuthor() + " / " + book.getPublisher() );
-                count++;
+                System.out.println(db.reandomEmoji() + key +
+                        " / " + book.getTitle() +
+                        " / " + book.getAuthor() +
+                        " / " + book.getPublisher() +
+                        " / " + book.getCategory() +
+                        " / 총" + book.getPages() + "쪽\n" +
+                        book.getIntroduce());
+                System.out.println("==========================================");
             }
-            System.out.println("==========================================");
 
             Scanner input = new Scanner(System.in);
-            System.out.println("찜 목록에서 삭제 (Y / N)");
+            System.out.println("찜 목록에서 삭제하기 (Y / N)");
             String yn = input.nextLine();
             String removeWish = "";
 
