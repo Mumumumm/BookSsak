@@ -4,6 +4,7 @@ import java.sql.*;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Scanner;
+import java.util.Timer;
 
 public class DBFoot {
     private String driver = "com.mysql.cj.jdbc.Driver";
@@ -64,7 +65,7 @@ public class DBFoot {
             PreparedStatement pstmt = this.conn.prepareStatement(sql);
             pstmt.setString(1, userid);
             ResultSet rs = pstmt.executeQuery();
-            if(rs.next()) {
+            if (rs.next()) {
                 if (rs.getInt("count") == 0) {
                     System.out.println("현재 읽고 있는 책이 없어요.");
                     return;
@@ -85,6 +86,7 @@ public class DBFoot {
             e.printStackTrace();
         }
     }
+
     /// 독서 시작
     public void updateReadRecord(String userid, String time, int page) {
         try {
@@ -101,6 +103,7 @@ public class DBFoot {
             e.printStackTrace();
         }
     }
+
     // 책 등록
     public boolean inputReadBook(String userid, String bookid) {
         String sql = "update userlibrary set current = true, start_date = curdate() where userid = ? and bookid = ?";
@@ -110,8 +113,8 @@ public class DBFoot {
             pstmt2.setString(1, userid);
             pstmt2.executeQuery();
             ResultSet rs = pstmt2.getResultSet();
-            if(rs.next()){
-                if(rs.getInt("count")>0){
+            if (rs.next()) {
+                if (rs.getInt("count") > 0) {
                     System.out.println("이미 읽고있는 책이 있습니다.");
                     return false;
                 }
@@ -129,7 +132,8 @@ public class DBFoot {
         return true;
     }
 
-    public boolean changeReadBook(String userId, String bookId){
+    public boolean changeReadBook(String userId, String bookId) {
+
         String sql = "update userlibrary set current = false where userid = ? and current = true";
         String sql2 = "update userlibrary set current = true where userid = ? and bookid = ?";
         try {
@@ -140,13 +144,15 @@ public class DBFoot {
             pstmt2.setString(1, userId);
             pstmt2.setString(2, bookId);
             pstmt2.executeUpdate();
-        }
-        catch (SQLException e){
+
+        } catch (SQLException e) {
+
             e.printStackTrace();
             return false;
         }
         return true;
     }
+
     /// /////////////////////////////독서 첼린지 끝//////////////////////////////////////////////////
     /// /////////////////////////////내 통계 시작
     /// 언제만들지 히히
@@ -161,7 +167,7 @@ public class DBFoot {
             checkDuplicate.setString(1, userid);
             checkDuplicate.setString(2, book.getBookid());
             ResultSet rs = checkDuplicate.executeQuery();
-            if(rs.next()){
+            if (rs.next()) {
                 if (rs.getInt("count") > 0) {
                     System.out.println("이미 찜목록에 있는 책입니다.");
                     return;
@@ -223,7 +229,7 @@ public class DBFoot {
             isPstmt.setString(1, userid);
             isPstmt.setString(2, book.getBookid());
             ResultSet rs = isPstmt.executeQuery();
-            if(rs.next()){
+            if (rs.next()) {
                 if (rs.getInt("count") == 0) {
                     System.out.println("책을 찾을 수 없습니다.");
                     return;
@@ -359,8 +365,6 @@ public class DBFoot {
 
         return emojibook[r];
     }
-
-    // 누적시간 메서드
 
 
 }
