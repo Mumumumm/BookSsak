@@ -312,6 +312,7 @@ public class DBConnect {
                 int finishBooks = rs.getInt("finish_books");
                 String totalTime = rs.getString("total_time");
 
+                System.out.println("[내 독서 통계]");
                 System.out.println("📘 독서중 책 수: " + readingBooks);
                 System.out.println("📗 완독한 책 수 : " + finishBooks);
                 System.out.println("--------------------------------------");

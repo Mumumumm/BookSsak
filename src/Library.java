@@ -84,7 +84,7 @@ import java.util.Scanner;
             String search = input.nextLine();
 
             System.out.println();
-            System.out.print("🔍" + "'"+ search +"'" + " 검색 결과");
+            System.out.print("🔍" + "'"+ search +"'" + " 검색 도서\n");
             HashMap<String, Book> resultBooks = db.searchBook(search);
 
             if (resultBooks.isEmpty()) {
@@ -144,7 +144,7 @@ import java.util.Scanner;
             System.out.println("오늘의 감정을 입력하세요.");
             String moodInput = input.nextLine();
             System.out.println();
-            System.out.print("🔍" + "'"+ moodInput +"'" + " 검색 결과\n");
+            System.out.print("🔍" + "'"+ moodInput +"'" + " 추천 도서\n");
 
             String keyword = "";
             switch (moodInput) {
@@ -216,7 +216,6 @@ import java.util.Scanner;
 
             HashMap<String, Book> recommenderBook = db.moodBook(keyword);
 
-            System.out.println("==========================================");
             Iterator<Map.Entry<String, Book>> iterator = recommenderBook.entrySet().iterator();
             int count = 1;
             while (iterator.hasNext()) {
