@@ -58,7 +58,7 @@ public class FootPrints {
                         " / " + book[3] +
                         " / " + book[4] + "\n");
                 System.out.println(book[10]);
-                System.out.println("읽은 페이지 : " + book[8] + "쪽 / " + book[7]);
+                System.out.println("읽은 페이지 : " + book[8] + "쪽 / " + book[7] + "쪽");
                 System.out.println("독서날짜 : " + book[5] + " ~ " + book[6]);
                 System.out.println("==================================================");
             }
