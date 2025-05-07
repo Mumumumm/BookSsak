@@ -93,10 +93,10 @@ public class BookChallenge {
             System.out.print(" / " + entry.getValue().getCategory());
             System.out.print(" / 총 " + entry.getValue().getPages() + "쪽\n");
             System.out.println(entry.getValue().getIntroduce());
-            System.out.println("==============================================");
+            System.out.println("==================================================");
         }
         try {
-            System.out.print("읽을 책의 isbn을 입력해주세요. ");
+            System.out.print("읽을 책의 ISBN을 입력해주세요. ");
             Scanner s = new Scanner(System.in);
             String inputIsbn = s.nextLine();
             if (!wishList.containsKey(inputIsbn)) {
@@ -138,9 +138,9 @@ public class BookChallenge {
             System.out.print(" / " + entry.getValue().getCategory());
             System.out.print(" / 총 " + entry.getValue().getPages() + "쪽\n");
             System.out.println(entry.getValue().getIntroduce());
-            System.out.println("==============================================");
+            System.out.println("==================================================");
         }
-        System.out.print("변경할 책의 isbn을 입력해주세요. ");
+        System.out.print("변경할 책의 ISBN을 입력해주세요. ");
         Scanner s = new Scanner(System.in);
         String inputIsbn = s.nextLine();
         System.out.println();

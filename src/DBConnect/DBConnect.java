@@ -282,14 +282,15 @@ public class DBConnect {
             pstmt.setString(8, book.getKeyword());
             pstmt.setInt(9, book.getPages());
             pstmt.executeUpdate(); // 찜목록 insert 끝
-            System.out.println(book.getTitle() + " 이(가) 찜목록에 추가되었습니다.");
+            System.out.println();
+            System.out.println("📚" + book.getTitle() + " 이(가) 찜목록에 추가되었습니다.");
+            System.out.println();
         } catch (SQLException e) {
             e.printStackTrace();
         } catch (Exception e) {
             e.printStackTrace();
             return;
         }
-        System.out.println(book.getTitle() + " / " + book.getAuthor() + " 이(가) 찜목록에 추가되었습니다.");
     }
 
     // 찜 목록 보기
@@ -338,7 +339,9 @@ public class DBConnect {
             pstmt.setString(1, userid);
             pstmt.setString(2, book.getBookid());
             pstmt.executeUpdate();
-            System.out.println(book.getTitle() + " 이(가) 서재에서 삭제되었습니다.");
+            System.out.println();
+            System.out.println("📚" + book.getTitle() + " 이(가) 서재에서 삭제되었습니다.");
+            System.out.println();
         } catch (SQLException e) {
             e.printStackTrace();
         }
