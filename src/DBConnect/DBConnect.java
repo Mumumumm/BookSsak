@@ -5,13 +5,13 @@ import java.sql.Date;
 import java.util.*;
 
 public class DBConnect {
+    // ============================= DB 연결 strat =============================
     private String driver = "com.mysql.cj.jdbc.Driver";
     private String url = "jdbc:mysql://127.0.0.1:3306/booksak?serverTimeZone=UTC";
     private String user = "root";
     private String password = "1234";
     private Connection conn = null;
     private Statement stmt = null;
-
 
     public DBConnect() {
     }
@@ -27,7 +27,10 @@ public class DBConnect {
             e.printStackTrace();
         }
     }
+    // ============================= DB 연결 end =============================
 
+
+    // ============================= 로그인 strat =============================
     public User checkLogin(String inputId, String inputPw) {
         User loginUser = null;
         String sql = "select * from users where userid = ? and userpw = ?";
@@ -52,10 +55,10 @@ public class DBConnect {
         }
         return loginUser;
     }
+    // ============================= 로그인 end =============================
 
-    /// /////////////////////////////로그인 끝//////////////////////////////////////////////////
-    /// /////////////////////////////독서 첼린지 시작//////////////////////////////////////////////////
 
+    // ============================= 독서 챌린지 strat =============================
     public void currentReadBook(String userid) {
         String sql = "select count(*) as count from userlibrary where userid = ? and current = true";
         String sql2 = "select * from userlibrary where userid = ? and current = true";
@@ -120,17 +123,15 @@ public class DBConnect {
         } catch (SQLException e) {
             e.printStackTrace();
         }
-
     }
 
-    /// 독서 시작
-    public void updateReadRecord(String userid, String time, int page) {
+    // 독서 시작
+    public void updateReadRecord(String userid, String time, int pages ) {
         try {
             String sql = "UPDATE userlibrary SET reading_time = ADDTIME(reading_time, ?), start_date = NOW(), read_pages = read_pages + ?, end_date = curdate() WHERE userid = ? and current = true";
             PreparedStatement pstmt = conn.prepareStatement(sql);
-
-            pstmt.setString(1, time); // TIME 타입은 문자열 형식 "HH:MM:SS" 가능
-            pstmt.setInt(2, page);
+            pstmt.setString(1, time); // TIME 타입 문자열 "HH:MM:SS"
+            pstmt.setInt(2, pages);
             pstmt.setString(3, userid);
             pstmt.executeUpdate();
             pstmt.close();
@@ -162,7 +163,7 @@ public class DBConnect {
             ResultSet rs = pstmt2.getResultSet();
             if (rs.next()) {
                 if (rs.getInt("count") > 0) {
-                    System.out.println("이미 읽고있는 책이 있습니다.");
+                    System.out.println();
                     return false;
                 }
             }
@@ -170,7 +171,9 @@ public class DBConnect {
             pstmt.setString(1, userid);
             pstmt.setString(2, bookid);
             int rowsAffected = pstmt.executeUpdate();
-            if (rowsAffected > 1) {
+            if (rowsAffected == 1) {
+                return true;
+            } else {
                 return false;
             }
         } catch (SQLException e) {
@@ -180,7 +183,7 @@ public class DBConnect {
     }
 
     public boolean changeReadBook(String userId, String bookId) {
-        String sql = "update userlibrary set current = false where userid = ? and current = true ";
+        String sql = "update userlibrary set current = false where userid = ? and current = true";
         String sql2 = "update userlibrary set current = true where userid = ? and bookid = ?";
         try {
             PreparedStatement pstmt = this.conn.prepareStatement(sql);
@@ -244,239 +247,18 @@ public class DBConnect {
                     updateEndDate(userid);
                     System.out.println("🎉완독 했습니다!");
                 }
-
             }
         } catch (SQLException e) {
             e.printStackTrace();
         }
     }
 
-    /// /////////////////////////////독서 첼린지 끝//////////////////////////////////////////////////
-    /// /////////////////////////////내 통계 시작
-    /// 언제만들지 히히
-    /// /////////////////////////////내 통계 끝
-    /// //////////////////////////////라이브러리 시작/////////////////////////////////////////////////
-
-    public void inputWishList(String userid, Book book) {
-        String checkSql = "select count(*) as count from userlibrary where userid = ? and bookid = ?"; // 중복체크 쿼리
-        String sql = "insert into userlibrary values (?, ?, ?, ?, ?, ?, ?, ?, default, default, ?, null, null, default)"; // insert 쿼리
-        try { //중복체크 시작
-            PreparedStatement checkDuplicate = this.conn.prepareStatement(checkSql);
-            checkDuplicate.setString(1, userid);
-            checkDuplicate.setString(2, book.getBookid());
-            ResultSet rs = checkDuplicate.executeQuery();
-            if (rs.next()) {
-                if (rs.getInt("count") > 0) {
-                    System.out.println("이미 찜목록에 있는 책입니다.");
-                    return;
-                }    // 중복체크 끝
-            }
-            PreparedStatement pstmt = this.conn.prepareStatement(sql);
-            pstmt.setString(1, userid);
-            pstmt.setString(2, book.getBookid());
-            pstmt.setString(3, book.getTitle());
-            pstmt.setString(4, book.getAuthor());
-            pstmt.setString(5, book.getPublisher());
-            pstmt.setString(6, book.getIntroduce());
-            pstmt.setString(7, book.getCategory());
-            pstmt.setString(8, book.getKeyword());
-            pstmt.setInt(9, book.getPages());
-            pstmt.executeUpdate(); // 찜목록 insert 끝
-            System.out.println();
-            System.out.println("📚" + book.getTitle() + " 이(가) 찜목록에 추가되었습니다.");
-            System.out.println();
-        } catch (SQLException e) {
-            e.printStackTrace();
-        } catch (Exception e) {
-            e.printStackTrace();
-            return;
-        }
-    }
-
-    // 찜 목록 보기
-    public HashMap<String, Book> selectWishList(String userid) {
-        String sql = "select * from userlibrary where userid = ?";
-        HashMap<String, Book> wishList = new HashMap<>();
-        try {
-            PreparedStatement pstmt = this.conn.prepareStatement(sql);
-            pstmt.setString(1, userid);
-            ResultSet rs = pstmt.executeQuery();
-            while (rs.next()) {
-                wishList.put(rs.getString("bookid"),
-                        new Book(
-                                rs.getString("bookid"),
-                                rs.getString("title"),
-                                rs.getString("author"),
-                                rs.getString("publisher"),
-                                rs.getString("introduce"),
-                                rs.getString("category"),
-                                rs.getString("keyword"),
-                                rs.getInt("pages")
-                        ));
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        return wishList; // 비어있으면 리턴받은곳에서 isEmpty 뭐시기 써서 비어있는거 확인하고 비어있다고 해줘야함
-    }
-
-    // 찜 목록에서 삭제
-    public void deleteWishList(String userid, Book book) {
-        String isInsql = "select count(*) as count from userlibrary WHERE userid = ? and bookid = ?";
-        String sql = "DELETE FROM userlibrary WHERE userid = ? and bookid = ?";
-        try {
-            PreparedStatement isPstmt = this.conn.prepareStatement(isInsql);
-            isPstmt.setString(1, userid);
-            isPstmt.setString(2, book.getBookid());
-            ResultSet rs = isPstmt.executeQuery();
-            if (rs.next()) {
-                if (rs.getInt("count") == 0) {
-                    System.out.println("책을 찾을 수 없습니다.");
-                    return;
-                }    // 중복체크 끝
-            }
-            PreparedStatement pstmt = this.conn.prepareStatement(sql);
-            pstmt.setString(1, userid);
-            pstmt.setString(2, book.getBookid());
-            pstmt.executeUpdate();
-            System.out.println();
-            System.out.println("📚" + book.getTitle() + " 이(가) 서재에서 삭제되었습니다.");
-            System.out.println();
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-    }
-
-    // 도서 검색
-    public HashMap<String, Book> searchBook(String input) {
-        HashMap<String, Book> resultBooks = new HashMap<>();
-        String sql = "select * from books where title like ? or author like ? or publisher like ?";
-        String inputKeyword = "%" + input + "%";
-        try (PreparedStatement pstmt = this.conn.prepareStatement(sql)) {
-            pstmt.setString(1, inputKeyword);
-            pstmt.setString(2, inputKeyword);
-            pstmt.setString(3, inputKeyword);
-            ResultSet rs = pstmt.executeQuery();
-            if (rs.next()) {
-                while (true) {
-                    resultBooks.put(
-                            rs.getString("bookid"),
-                            new Book(
-                                    rs.getString("bookid"),
-                                    rs.getString("title"),
-                                    rs.getString("author"),
-                                    rs.getString("publisher"),
-                                    rs.getString("introduce"),
-                                    rs.getString("category"),
-                                    rs.getString("keyword"),
-                                    rs.getInt("pages")
-                            )
-                    );
-                    if (!rs.next()) {
-                        break;
-                    }
-                }
-            } else {
-                System.out.println("검색 결과가 없습니다.");
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
-            System.out.println("sql오류");
-        }
-        return resultBooks;
-    }
+    // ============================= 독서 챌린지 end =============================
 
 
-    // 도서 추천 리스트
-    public HashMap<String, Book> moodBook(String p_keyword) {
-        HashMap<String, Book> recommenderBook = new HashMap<>();
-        String sql = "select * from books where keyword like ?";
-        try (PreparedStatement pstmt = this.conn.prepareStatement(sql)) {
-            pstmt.setString(1, "%" + p_keyword + "%");
-            ResultSet rs = pstmt.executeQuery();
-            while (rs.next()) {
-                String bookid = rs.getString("bookid");
-                String title = rs.getString("title");
-                String author = rs.getString("author");
-                String publisher = rs.getString("publisher");
-                String introduce = rs.getString("introduce");
-                String category = rs.getString("category");
-                String keyword = rs.getString("keyword");
-                int pages = rs.getInt("pages");
+    // ============================= 독서 발자취 strat =============================
 
-                recommenderBook.put(bookid, new Book(bookid, title, author, publisher, introduce, category, keyword, pages));
-            }
-            rs.close(); // 결과셋 담는 메모리 정리
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-        return recommenderBook;
-    }
-
-
-    // 인기 도서 리스트
-    public HashMap<String, Book> getPopularBooks() {
-        HashMap<String, Book> popularBooks = new HashMap<>();
-        String sql = "select b.bookid, b.title, b.author, b.publisher, b.introduce, b.category, b.keyword, b.pages, count(*) as read_count " +
-                "from userlibrary u " +
-                "join books b on u.bookid = b.bookid " +
-                "where u.start_date is not null " +
-                "group by b.bookid " +
-                "order by read_count desc " +
-                "limit 5";
-
-        try (PreparedStatement pstmt = this.conn.prepareStatement(sql)) {
-            ResultSet rs = pstmt.executeQuery();
-            while (rs.next()) {
-                String bookid = rs.getString("bookid");
-                String title = rs.getString("title");
-                String author = rs.getString("author");
-                String publisher = rs.getString("publisher");
-                String introduce = rs.getString("introduce");
-                String category = rs.getString("category");
-                String keyword = rs.getString("keyword");
-                int pages = rs.getInt("pages");
-
-                popularBooks.put(bookid, new Book(bookid, title, author, publisher, introduce, category, keyword, pages));
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-        return popularBooks;
-    }
-
-    /// //////////////////////////////라이브러리 끝/////////////////////////////////////////////////
-
-
-    // DB 끊는 함수
-    public void releaseDB() {
-        try {
-            this.stmt.close();
-            this.conn.close();
-            // db와 연결 단절;
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-    }
-
-
-    // 이모지
-    public String reandomEmoji() {
-        int r = (int) (Math.random() * 5);
-        String[] emojibook = new String[5];
-        emojibook[0] = "📕";
-        emojibook[1] = "📗";
-        emojibook[2] = "📘";
-        emojibook[3] = "📙";
-        emojibook[4] = "📒";
-
-        return emojibook[r];
-    }
-
-    /// ///////////////////////////////////발 자취//////////////////////////////////////////////
-    // ============================= 독서 발자취 시작 =============================
-
-// 내 서재 리스트
+    // 내 서재 리스트
     public List<String[]> printMyLibrary(String userid) {
         String sql = "select * from userlibrary where userid = ? and start_date is not null";
         List<String[]> myLibraryList = new ArrayList<>();
@@ -584,6 +366,223 @@ public class DBConnect {
         return rankList;
     }
 
+    // ============================= 독서 발자취 end =============================
 
-    // ============================= 독서 발자취 끝 =============================
+
+    // ============================= 라이브러리 strat =============================
+
+    // 찜 목록에 추가
+    public void inputWishList(String userid, Book book) {
+        String checkSql = "select count(*) as count from userlibrary where userid = ? and bookid = ?"; // 중복체크 쿼리
+        String sql = "insert into userlibrary values (?, ?, ?, ?, ?, ?, ?, ?, default, default, ?, null, null, default, default)"; // insert 쿼리
+        try { //중복체크 시작
+            PreparedStatement checkDuplicate = this.conn.prepareStatement(checkSql);
+            checkDuplicate.setString(1, userid);
+            checkDuplicate.setString(2, book.getBookid());
+            ResultSet rs = checkDuplicate.executeQuery();
+            if (rs.next()) {
+                if (rs.getInt("count") > 0) {
+                    System.out.println("이미 찜목록에 있는 책입니다.");
+                    return;
+                }    // 중복체크 끝
+            }
+            PreparedStatement pstmt = this.conn.prepareStatement(sql);
+            pstmt.setString(1, userid);
+            pstmt.setString(2, book.getBookid());
+            pstmt.setString(3, book.getTitle());
+            pstmt.setString(4, book.getAuthor());
+            pstmt.setString(5, book.getPublisher());
+            pstmt.setString(6, book.getIntroduce());
+            pstmt.setString(7, book.getCategory());
+            pstmt.setString(8, book.getKeyword());
+            pstmt.setInt(9, book.getPages());
+            pstmt.executeUpdate(); // 찜목록 insert 끝
+            System.out.println();
+            System.out.println("📚" + book.getTitle() + " 이(가) 찜목록에 추가되었습니다.");
+            System.out.println();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } catch (Exception e) {
+            e.printStackTrace();
+            return;
+        }
+    }
+
+    // 찜 목록 보기
+    public HashMap<String, Book> selectWishList(String userid) {
+        String sql = "select * from userlibrary where userid = ?";
+        HashMap<String, Book> wishList = new HashMap<>();
+        try {
+            PreparedStatement pstmt = this.conn.prepareStatement(sql);
+            pstmt.setString(1, userid);
+            ResultSet rs = pstmt.executeQuery();
+            while (rs.next()) {
+                wishList.put(rs.getString("bookid"),
+                        new Book(
+                                rs.getString("bookid"),
+                                rs.getString("title"),
+                                rs.getString("author"),
+                                rs.getString("publisher"),
+                                rs.getString("introduce"),
+                                rs.getString("category"),
+                                rs.getString("keyword"),
+                                rs.getInt("pages")
+                        ));
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return wishList; // 비어있으면 리턴받은곳에서 isEmpty 뭐시기 써서 비어있는거 확인하고 비어있다고 해줘야함
+    }
+
+    // 찜 목록에서 삭제
+    public void deleteWishList(String userid, Book book) {
+        String isInsql = "select count(*) as count from userlibrary WHERE userid = ? and bookid = ?";
+        String sql = "DELETE FROM userlibrary WHERE userid = ? and bookid = ?";
+        try {
+            PreparedStatement isPstmt = this.conn.prepareStatement(isInsql);
+            isPstmt.setString(1, userid);
+            isPstmt.setString(2, book.getBookid());
+            ResultSet rs = isPstmt.executeQuery();
+            if (rs.next()) {
+                if (rs.getInt("count") == 0) {
+                    System.out.println("책을 찾을 수 없습니다.");
+                    return;
+                }    // 중복체크 끝
+            }
+            PreparedStatement pstmt = this.conn.prepareStatement(sql);
+            pstmt.setString(1, userid);
+            pstmt.setString(2, book.getBookid());
+            pstmt.executeUpdate();
+            System.out.println(book.getTitle() + "이(가) 서재에서 삭제되었습니다.");
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+    // 도서 검색
+    public HashMap<String, Book> searchBook(String input) {
+        HashMap<String, Book> resultBooks = new HashMap<>();
+        String sql = "select * from books where title like ? or author like ? or publisher like ?";
+        String inputKeyword = "%" + input + "%";
+        try (PreparedStatement pstmt = this.conn.prepareStatement(sql)) {
+            pstmt.setString(1, inputKeyword);
+            pstmt.setString(2, inputKeyword);
+            pstmt.setString(3, inputKeyword);
+            ResultSet rs = pstmt.executeQuery();
+            if (rs.next()) {
+                while (true) {
+                    resultBooks.put(
+                            rs.getString("bookid"),
+                            new Book(
+                                    rs.getString("bookid"),
+                                    rs.getString("title"),
+                                    rs.getString("author"),
+                                    rs.getString("publisher"),
+                                    rs.getString("introduce"),
+                                    rs.getString("category"),
+                                    rs.getString("keyword"),
+                                    rs.getInt("pages")
+                            )
+                    );
+                    if (!rs.next()) {
+                        break;
+                    }
+                }
+            } else {
+                System.out.println("검색 결과가 없습니다.");
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+            System.out.println("sql오류");
+        }
+        return resultBooks;
+    }
+
+    // 도서 추천 리스트
+    public HashMap<String, Book> moodBook(String p_keyword) {
+        HashMap<String, Book> recommenderBook = new HashMap<>();
+        String sql = "select * from books where keyword like ?";
+        try (PreparedStatement pstmt = this.conn.prepareStatement(sql)) {
+            pstmt.setString(1, "%" + p_keyword + "%");
+            ResultSet rs = pstmt.executeQuery();
+            while (rs.next()) {
+                String bookid = rs.getString("bookid");
+                String title = rs.getString("title");
+                String author = rs.getString("author");
+                String publisher = rs.getString("publisher");
+                String introduce = rs.getString("introduce");
+                String category = rs.getString("category");
+                String keyword = rs.getString("keyword");
+                int pages = rs.getInt("pages");
+
+                recommenderBook.put(bookid, new Book(bookid, title, author, publisher, introduce, category, keyword, pages));
+            }
+            rs.close(); // 결과셋 담는 메모리 정리
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return recommenderBook;
+    }
+
+    // 인기 도서 리스트
+    public HashMap<String, Book> getPopularBooks() {
+        HashMap<String, Book> popularBooks = new HashMap<>();
+        String sql = "select b.bookid, b.title, b.author, b.publisher, b.introduce, b.category, b.keyword, b.pages, count(*) as read_count " +
+                "from userlibrary u " +
+                "join books b on u.bookid = b.bookid " +
+                "where u.start_date is not null " +
+                "group by b.bookid " +
+                "order by read_count desc " +
+                "limit 5";
+
+        try (PreparedStatement pstmt = this.conn.prepareStatement(sql)) {
+            ResultSet rs = pstmt.executeQuery();
+            while (rs.next()) {
+                String bookid = rs.getString("bookid");
+                String title = rs.getString("title");
+                String author = rs.getString("author");
+                String publisher = rs.getString("publisher");
+                String introduce = rs.getString("introduce");
+                String category = rs.getString("category");
+                String keyword = rs.getString("keyword");
+                int pages = rs.getInt("pages");
+
+                popularBooks.put(bookid, new Book(bookid, title, author, publisher, introduce, category, keyword, pages));
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return popularBooks;
+    }
+
+    // ============================= 라이브러리 end =============================
+
+
+    // ============================= etc =============================
+
+    // DB 끊는 함수
+    public void releaseDB() {
+        try {
+            this.stmt.close();
+            this.conn.close();
+            // db와 연결 단절;
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+    // 이모지
+    public String reandomEmoji() {
+        int r = (int) (Math.random() * 5);
+        String[] emojibook = new String[5];
+        emojibook[0] = "📕";
+        emojibook[1] = "📗";
+        emojibook[2] = "📘";
+        emojibook[3] = "📙";
+        emojibook[4] = "📒";
+
+        return emojibook[r];
+    }
+
 }
