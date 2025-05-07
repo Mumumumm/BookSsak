@@ -52,11 +52,11 @@ public class FootPrints {
         } else {
             System.out.println("📚 내 서재 목록:");
             for (String[] book : myLibrary) {
-                System.out.println("책 ID: " + book[0]);
-                System.out.println("제목: " + book[1]);
-                System.out.println("저자: " + book[2]);
-                System.out.println("출판사: " + book[3]);
-                System.out.println("카테고리: " + book[4]);
+                System.out.print(db.reandomEmoji() + book[0] +
+                        " / " + book[1] +
+                        " / " + book[2] +
+                        " / " + book[3] +
+                        " / " + book[4] + "\n");
                 System.out.println("시작일: " + book[5]);
                 System.out.println("종료일: " + book[6]);
                 System.out.println("---------------------------");

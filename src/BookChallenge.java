@@ -63,6 +63,7 @@ public class BookChallenge {
 
 
     public void startReadBook(String userid) {
+
         Timer timer = new Timer();
         ResultReadBook result = timer.bookTimer(userid); // 시간, 페이지 result에 리턴
         DBConnect db = new DBConnect();
@@ -77,38 +78,39 @@ public class BookChallenge {
         db.initDBConnect();
         HashMap<String, Book> wishList = db.selectWishList(userid);
         if (wishList.isEmpty()) {
-            System.out.println("찜 목록이 비어있습니다. 라이브러리에서 내 서재애 책을 추가해주세요.");
+            System.out.println("현재 읽을 책이 없습니다. 라이브러리에서 내 서재애 책을 추가해주세요.");
             db.releaseDB();
             return;
 
         }
-        System.out.println("현재 찜목록 : ");
+        System.out.println("📌[읽을 책을 골라주세요!] ");
         Iterator<Map.Entry<String, Book>> iterator = wishList.entrySet().iterator();
         while (iterator.hasNext()) {
             Map.Entry<String, Book> entry = iterator.next();
-            System.out.println("ISBN / " + entry.getValue().getBookid());
-            System.out.println("책 제목 / " + entry.getValue().getTitle());
-            System.out.println("저자 / " + entry.getValue().getAuthor());
-            System.out.println("출판사 / " + entry.getValue().getPublisher());
-            System.out.println("한줄 소개 / " + entry.getValue().getIntroduce());
-            System.out.println("카테고리 / " + entry.getValue().getCategory());
-            System.out.println("키워드 / " + entry.getValue().getKeyword());
-            System.out.println("총 페이지 수 / " + entry.getValue().getPages() + " 쪽");
+            System.out.print(db.reandomEmoji() + " " + entry.getValue().getBookid());
+            System.out.print(" / " + entry.getValue().getTitle());
+            System.out.print(" / " + entry.getValue().getAuthor());
+            System.out.print(" / " + entry.getValue().getPublisher());
+            System.out.print(" / " + entry.getValue().getCategory());
+            System.out.print(" / 총 " + entry.getValue().getPages() + "쪽\n");
+            System.out.println(entry.getValue().getIntroduce());
             System.out.println("==============================================");
         }
         try {
-            System.out.print("읽을 책의 isbn을 입력하세요. ");
+            System.out.print("읽을 책의 isbn을 입력해주세요. ");
             Scanner s = new Scanner(System.in);
             String inputIsbn = s.nextLine();
             if (!wishList.containsKey(inputIsbn)) {
                 System.out.println("잘못입력하였습니다.");
+                System.out.println();
                 return;
             }
             if (db.inputReadBook(userid, inputIsbn)) {
                 System.out.println(wishList.get(inputIsbn).getTitle() + "(으)로 현재 읽는 책을 변경하였습니다.");
             } else {
-                System.out.println("이미 등록되어 있는 책입니다.");
+                System.out.println("🚫이미 등록되어 있는 책입니다.");
             }
+            System.out.println();
             db.releaseDB();
         } catch (
                 Exception e) {
@@ -121,26 +123,25 @@ public class BookChallenge {
         db.initDBConnect();
         HashMap<String, Book> wishList = db.selectWishList(userid);
         if (wishList.isEmpty()) {
-            System.out.println("내 서재가 비어있습니다. 라이브러리에서 내 서재애 책을 추가해주세요.");
+            System.out.println("변경할 책이 없습니다. 라이브러리에서 내 서재애 책을 추가해주세요.");
             db.releaseDB();
             return;
         }
-        System.out.println("내 서재 목록 : ");
+        System.out.println("📌[변경할 책을 골라주세요!] ");
         Iterator<Map.Entry<String, Book>> iterator = wishList.entrySet().iterator();
         while (iterator.hasNext()) {
             Map.Entry<String, Book> entry = iterator.next();
 
-            System.out.println("ISBN / " + entry.getValue().getBookid());
-            System.out.println("책 제목 / " + entry.getValue().getTitle());
-            System.out.println("저자 / " + entry.getValue().getAuthor());
-            System.out.println("출판사 / " + entry.getValue().getPublisher());
-            System.out.println("한줄 소개 / " + entry.getValue().getIntroduce());
-            System.out.println("카테고리 / " + entry.getValue().getCategory());
-            System.out.println("키워드 / " + entry.getValue().getKeyword());
-            System.out.println("총 페이지 수 / " + entry.getValue().getPages() + " 쪽");
+            System.out.print(db.reandomEmoji() + " " + entry.getValue().getBookid());
+            System.out.print(" / " + entry.getValue().getTitle());
+            System.out.print(" / " + entry.getValue().getAuthor());
+            System.out.print(" / " + entry.getValue().getPublisher());
+            System.out.print(" / " + entry.getValue().getCategory());
+            System.out.print(" / 총 " + entry.getValue().getPages() + "쪽\n");
+            System.out.println(entry.getValue().getIntroduce());
             System.out.println("==============================================");
         }
-        System.out.print("변경할 책의 ISBN : ");
+        System.out.print("변경할 책의 isbn을 입력해주세요. ");
         Scanner s = new Scanner(System.in);
         String inputIsbn = s.nextLine();
         System.out.println();
@@ -149,5 +150,6 @@ public class BookChallenge {
         } else {
             System.out.println("오류");
         }
+        System.out.println();
     }
 }
