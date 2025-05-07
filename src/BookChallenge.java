@@ -86,14 +86,13 @@ public class BookChallenge {
         Iterator<Map.Entry<String, Book>> iterator = wishList.entrySet().iterator();
         while (iterator.hasNext()) {
             Map.Entry<String, Book> entry = iterator.next();
-            System.out.println(db.reandomEmoji() + " " + entry.getValue().getBookid());
-            System.out.println("제목 : " + entry.getValue().getTitle());
-            System.out.println("저자 : " + entry.getValue().getAuthor());
-            System.out.println("출판사 : " + entry.getValue().getPublisher());
-            System.out.println("한줄 소개 : " + entry.getValue().getIntroduce());
-            System.out.println("카테고리 : " + entry.getValue().getCategory());
-            System.out.println("키워드 : " + entry.getValue().getKeyword());
-            System.out.println("총 페이지 수 : " + entry.getValue().getPages() + "쪽");
+            System.out.print(db.reandomEmoji() + " " + entry.getValue().getBookid());
+            System.out.print(" / " + entry.getValue().getTitle());
+            System.out.print(" / " + entry.getValue().getAuthor());
+            System.out.print(" / " + entry.getValue().getPublisher());
+            System.out.print(" / " + entry.getValue().getCategory());
+            System.out.print(" / 총 " + entry.getValue().getPages() + "쪽\n");
+            System.out.println(entry.getValue().getIntroduce());
             System.out.println("==============================================");
         }
         try {
@@ -132,14 +131,13 @@ public class BookChallenge {
         while (iterator.hasNext()) {
             Map.Entry<String, Book> entry = iterator.next();
 
-            System.out.println(db.reandomEmoji() + " " + entry.getValue().getBookid());
-            System.out.println("제목 : " + entry.getValue().getTitle());
-            System.out.println("저자 : " + entry.getValue().getAuthor());
-            System.out.println("출판사 : " + entry.getValue().getPublisher());
-            System.out.println("한줄 소개 : " + entry.getValue().getIntroduce());
-            System.out.println("카테고리 : " + entry.getValue().getCategory());
-            System.out.println("키워드 : " + entry.getValue().getKeyword());
-            System.out.println("총 페이지 수 : " + entry.getValue().getPages() + "쪽");
+            System.out.print(db.reandomEmoji() + " " + entry.getValue().getBookid());
+            System.out.print(" / " + entry.getValue().getTitle());
+            System.out.print(" / " + entry.getValue().getAuthor());
+            System.out.print(" / " + entry.getValue().getPublisher());
+            System.out.print(" / " + entry.getValue().getCategory());
+            System.out.print(" / 총 " + entry.getValue().getPages() + "쪽\n");
+            System.out.println(entry.getValue().getIntroduce());
             System.out.println("==============================================");
         }
         System.out.print("변경할 책의 isbn을 입력해주세요. ");
