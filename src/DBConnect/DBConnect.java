@@ -66,6 +66,7 @@ public class DBConnect {
             if (rs.next()) {
                 if (rs.getInt("count") == 0) {
                     System.out.println("현재 읽고 있는 책이 없어요.");
+                    System.out.println();
                     return;
                 }
             }
@@ -81,6 +82,29 @@ public class DBConnect {
             int percentBar = (int) (progress * 10);
             StringBuilder progressBar = new StringBuilder();
 
+            // 내용들
+            System.out.print(rs2.getString("bookid") + " / " +
+                    rs2.getString("title") + " / " +
+                    rs2.getString("author") + " / " +
+                    rs2.getString("publisher") + " / " +
+                    rs2.getString("category") + "\n");
+            System.out.println(rs2.getString("introduce"));
+            System.out.print("읽은 페이지 : " + rs2.getInt("read_pages") + "쪽 / " +
+                    rs2.getInt("pages") + "쪽" + "\n");
+            System.out.println("총 읽은 시간 : " + rs2.getTime("reading_time"));
+            System.out.print("독서 날짜 : " + rs2.getDate("start_date") + " ~ " +
+                    rs2.getDate("end_date") + "\n");
+
+            // 퍼센트 바
+            for (int i = 0; i < 10; i++) {
+                if (i < percentBar) {
+                    progressBar.append("🟩");
+                } else {
+                    progressBar.append("⬜");
+                }
+            }
+            System.out.println(progressBar + " " + progressPercent + "%");
+
             // 진행률에 따른 프린트
             if (progress > 0.8) {
                 System.out.println("🔥 얼마 안남았습니다! ");
@@ -92,27 +116,11 @@ public class DBConnect {
                 System.out.println("🌱 이제 시작입니다! ");
             }
 
-            // 내용들
-            System.out.println("제목 : " + rs2.getString("title"));
-            System.out.println("저자 : " + rs2.getString("author"));
-            // 퍼센트 바
-            for (int i = 0; i < 10; i++) {
-                if (i < percentBar) {
-                    progressBar.append("🟩");
-                } else {
-                    progressBar.append("⬜");
-                }
-            }
-            System.out.println(progressBar + " " + progressPercent + "%");
-            System.out.print("읽은 페이지 : " + rs2.getInt("read_pages") + "쪽 / " +
-                    rs2.getInt("pages") + "쪽" +"\n");
-            System.out.println("총 읽은 시간 : " + rs2.getTime("reading_time"));
-            System.out.print("독서 날짜 : " + rs2.getDate("start_date") + " ~ " +
-                    rs2.getDate("end_date") +"\n");
             System.out.println();
         } catch (SQLException e) {
             e.printStackTrace();
         }
+
     }
 
     /// 독서 시작
@@ -483,6 +491,10 @@ public class DBConnect {
                         rs.getString("category"),
                         String.valueOf(rs.getDate("start_date")),
                         String.valueOf(rs.getDate("end_date")),
+                        String.valueOf(rs.getInt("pages")),
+                        String.valueOf(rs.getInt("read_pages")),
+                        String.valueOf(rs.getString("reading_time")),
+                        rs.getString("introduce")
                 };
                 myLibraryList.add(list);
             }
