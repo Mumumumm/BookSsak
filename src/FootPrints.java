@@ -86,7 +86,7 @@ public class FootPrints {
             System.out.println("🏆 다독왕 랭킹 (Top 5):");
             int rank = 1;
             for (String[] user : bookRank) {
-                System.out.println(rank + "위: " + user[0] + " - 완독한 책 수: " + user[1]);
+                System.out.println(rank + "위: " + user[0] + " - "+ user[1] + "권 완독" );
                 rank++;
             }
             System.out.println();
