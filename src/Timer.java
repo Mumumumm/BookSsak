@@ -9,7 +9,7 @@ public class Timer {
     private long startTimeMillis; // 시작 시간을 밀리초로 저장
 
     // Timer
-    public ResultReadBook bookTimer() {
+    public String bookTimer() {
         ScheduledExecutorService executor = Executors.newSingleThreadScheduledExecutor();
         Scanner scanner = new Scanner(System.in);
         System.out.println("⏰독서 시작! 중지하려면 Enter 키를 누르세요");
@@ -84,18 +84,8 @@ public class Timer {
         // 저장된 finalElapsedSeconds 변수를 이제 다른 로직에서 사용할 수 있습니다.
         // 예: if (finalElapsedSeconds > 60) { ... }
 
-        Scanner input = new Scanner(System.in);
-
-        System.out.println("\uD83D\uDCDD이번 챌린지는 몇 쪽까지 읽으셨나요?");
-        int pages = input.nextInt();
-        input.nextLine();
-        System.out.println("*****************************");
-        System.out.println("챌린지가 종료되었습니다 짝짝짝 \uD83D\uDC4F");
-        System.out.println("이번 읽은 페이지 " + pages);
-        System.out.println("이번 독서 시간 " + finalFormattedTime);
-        System.out.println("*****************************");
 
 
-        return new ResultReadBook(finalFormattedTime, pages);
+        return finalFormattedTime;
     }
 }
