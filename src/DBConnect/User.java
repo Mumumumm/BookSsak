@@ -1,17 +1,19 @@
 package DBConnect;
 
 import java.sql.Date;
+import java.util.HashMap;
 
 public class User {
     private String userId;
     private String userName;
     private Date userBirth;
-    public Book currentBook = null;
+    private String addr;
 
-    public User(String userId, String userName, Date userBirth) {
+    public User(String userId, String userName, Date userBirth, String addr) {
         this.userId = userId;
         this.userName = userName;
         this.userBirth = userBirth;
+        this.addr = addr;
     }
 
     public String getUserId() {
@@ -26,4 +28,5 @@ public class User {
         return userBirth;
     }
 
+    public String getAddr(){return addr;}
 }

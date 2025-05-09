@@ -9,8 +9,9 @@ public class Book {
     public String category;
     public String keyword;
     public int pages;
+    public int price;
 
-    public Book(String bookid, String title, String author, String publisher, String introduce, String category, String keyword, int pages) {
+    public Book(String bookid, String title, String author, String publisher, String introduce, String category, String keyword, int pages, int price) {
         this.bookid = bookid;
         this.title = title;
         this.author = author;
@@ -19,6 +20,7 @@ public class Book {
         this.category = category;
         this.keyword = keyword;
         this.pages = pages;
+        this.price = price;
     }
 
     public String getBookid() {
@@ -52,4 +54,6 @@ public class Book {
     public int getPages() {
         return pages;
     }
+
+    public int getPrice(){return price;}
 }
