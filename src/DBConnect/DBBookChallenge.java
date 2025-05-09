@@ -112,7 +112,7 @@ public class DBBookChallenge extends DBConnect{
 
     public void updateReadRecord(String userid, String time, int page) {
         try {
-            String sql = "UPDATE userlibrary SET reading_time = ADDTIME(reading_time, ?), read_pages = read_pages + ?, end_date = curdate() WHERE userid = ? and current = true";
+            String sql = "UPDATE userlibrary SET reading_time = ADDTIME(reading_time, ?), read_pages = ?, end_date = curdate() WHERE userid = ? and current = true";
             PreparedStatement pstmt = conn.prepareStatement(sql);
             pstmt.setString(1, time); // TIME 타입은 문자열 형식 "HH:MM:SS" 가능
             pstmt.setInt(2, page);
