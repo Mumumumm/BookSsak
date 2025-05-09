@@ -160,7 +160,7 @@ public class BookChallenge {
             db.releaseDB();
             return;
         }
-        System.out.println("📌[변경할 책을 골라주세요!] \n");
+        System.out.println("[📌변경할 책을 골라주세요!] \n");
         Iterator<Map.Entry<String, Book>> iterator = wishList.entrySet().iterator();
         while (iterator.hasNext()) {
             Map.Entry<String, Book> entry = iterator.next();
